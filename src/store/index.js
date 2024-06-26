@@ -11,6 +11,7 @@ export default new Vuex.Store({
     state:{
         account:"",
         role:"",
+        uid:null,
         baseUrl:"http://localhost:8081"
     },
     mutations:{
@@ -19,6 +20,9 @@ export default new Vuex.Store({
         },
         updateRole(state,data){
           state.role=data
+        },
+        updateUid(state,data){
+          state.uid=data
         }
      }
 })

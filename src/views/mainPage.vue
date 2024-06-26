@@ -19,15 +19,23 @@
       </el-row>
       <el-card style="margin-top: 20px;height: 420px">
           <el-table
-              :data="tableData"
+              :data="noticeList"
               style="width: 100%">
             <el-table-column
                 prop="course"
-                label="已购买课程">
+                label="通知课程">
             </el-table-column>
             <el-table-column
-                prop="name"
-                label="教师姓名">
+                prop="teacher"
+                label="教师">
+            </el-table-column>
+            <el-table-column
+                prop="title"
+                label="通知标题">
+            </el-table-column>
+            <el-table-column
+                prop="content"
+                label="通知标题">
             </el-table-column>
           </el-table>
         </el-card>
@@ -39,27 +47,10 @@
   export default {
     name: "HomeIfo",
     computed:{
- ...mapState(["account","baseUrl"]),
+ ...mapState(["account","baseUrl","uid"]),
 },
     data() {
       return {
-        tableData: [{
-          course: '计算机系统',
-          name: 'A',
-          jindu: '30%'
-        }, {
-            course: '计算机系统二',
-          name: 'B',
-          jindu: '30%'
-        }, {
-            course: '计算机系统三',
-          name: 'C',
-          jindu: '30%'
-        }, {
-            course: '计算机系统四',
-          name: 'D',
-          jindu: '30%'
-        }],
         user:{
           id:null,
           status:null,
@@ -67,25 +58,39 @@
           nickname:"",
           email:"",
           role:""
-        }
+        },
+        noticeList:[]
       }
 
     },
     created(){
       this.getUserDetail()
+      this.getNoticeList()
     },
     methods:{
-      ...mapMutations(["updateRole"]),
+      ...mapMutations(["updateRole","updateUid"]),
       getUserDetail(){
         this.$axios.post(this.baseUrl+"/user/showDetails",{
         account:this.account,
-      },{  
-    headers: {  
-      'Content-Type': 'application/json'  
-    }}).then(res=>{this.user=res.data
-      this.updateRole(user.role)
-    }
-    ).catch(error=>{console.error(error);})
+        },{  
+        headers: {  
+          'Content-Type': 'application/json'  
+        }}).then(
+          res=>{this.user=res.data
+          this.updateRole(this.user.role)
+          this.updateUid(this.user.id)
+        }
+        ).catch(error=>{console.error(error);})
+      },
+      getNoticeList(){
+        this.$axios.post(this.baseUrl+"/notice/findNotice",{
+          id:this.uid
+        },{  
+        headers: {  
+          'Content-Type': 'application/json'  
+        }}).then(res=>{
+          this.noticeList=res.data
+        }).catch(error=>{console.error(error);})
       }
     }
   }
