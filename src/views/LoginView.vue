@@ -1,5 +1,5 @@
 <template>
-  <el-form :label-width='70' class="login-container" ref="form" :model="form" :rules="rules" label-width="80px">
+  <el-form :label-width='70' class="login-container" ref="form" :model="form" :rules="rules">
     <h3 class="login_title">系统登录</h3>
     <el-form-item label="用户名" prop="username">
       <el-input v-model="form.username" placeholder="请输入账号"></el-input>
@@ -8,13 +8,18 @@
       <el-input type="password" v-model="form.password" autocomplete="off" placeholder="请输入密码"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" style="margin-left: 105px;margin-top: 10px">登录</el-button>
+      <el-button type="primary" style="margin-left: 105px;margin-top: 10px" @click="login">登录</el-button>
+      <el-button type="primary" style="margin-left: 105px;margin-top: 10px">注册</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import { mapState,mapMutations} from 'vuex';
 export default {
+  computed:{
+    ...mapState(["baseUrl"])
+  },
 data(){
   return{
     form:{
@@ -24,8 +29,32 @@ data(){
     rules:{
       username:[ { required: true, message: '请输入用户名', trigger: 'blur' } ],
       password:[ { required: true, message: '请输入密码', trigger: 'blur' }]
-    }
+    },
+    code:""
   }
+},
+methods:{
+  
+  ...mapMutations(["updateAccount","updateRole"]),
+  login(){
+    this.$axios.post(this.baseUrl+"/login",{
+      account:this.form.username,
+      password:this.form.password
+    },{  
+    headers: {  
+      'Content-Type': 'application/json'  
+    }}).then(res=>{this.code=res.data
+      if(this.code==="OK"){
+        this.updateAccount(this.form.username)
+        this.$router.push('/mainPage');  
+      }else{
+        alert('登录失败');  
+      }
+    }
+    ).catch(error=>{console.error(error);})
+
+  }
+
 }
 }
 </script>

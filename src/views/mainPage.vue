@@ -6,13 +6,12 @@
             <div class="user">
               <img src="../assets/ye.jpg">
               <div class="userInfo">
-                <p class="name">第一组</p>
-                <p class="access">学生</p>
+                <p class="name">{{ user.nickname }}</p>
+                <p class="access">{{user.role}}</p>
               </div>
             </div>
             <div class="login-info">
-              <p>学校<span>重庆邮电大学</span></p>
-              <p>专业<span>软件工程</span></p>
+              <p>邮箱<span>{{ user.email }}</span></p>
             </div>
           </el-card>
         </el-col>
@@ -30,18 +29,18 @@
                 prop="name"
                 label="教师姓名">
             </el-table-column>
-            <el-table-column
-                prop="jindu"
-                label="学习进度">
-            </el-table-column>
           </el-table>
         </el-card>
     </div>
   </template>
   
   <script>
+  import { mapState,mapMutations} from 'vuex';
   export default {
     name: "HomeIfo",
+    computed:{
+ ...mapState(["account","baseUrl"]),
+},
     data() {
       return {
         tableData: [{
@@ -60,7 +59,33 @@
             course: '计算机系统四',
           name: 'D',
           jindu: '30%'
-        }]
+        }],
+        user:{
+          id:null,
+          status:null,
+          account:this.account,
+          nickname:"",
+          email:"",
+          role:""
+        }
+      }
+
+    },
+    created(){
+      this.getUserDetail()
+    },
+    methods:{
+      ...mapMutations(["updateRole"]),
+      getUserDetail(){
+        this.$axios.post(this.baseUrl+"/user/showDetails",{
+        account:this.account,
+      },{  
+    headers: {  
+      'Content-Type': 'application/json'  
+    }}).then(res=>{this.user=res.data
+      this.updateRole(user.role)
+    }
+    ).catch(error=>{console.error(error);})
       }
     }
   }
