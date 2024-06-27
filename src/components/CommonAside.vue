@@ -37,7 +37,7 @@
 
         menuData: [
           {
-            path: '/',
+            path: '/mainPage',
             name: 'home',
             label: '首页',
             icon: 's-home',

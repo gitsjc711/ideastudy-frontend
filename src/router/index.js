@@ -4,7 +4,6 @@ import Login from "@/views/LoginView.vue";
 import mainPage from "@/views/mainPage.vue";
 import User from "@/views/student/user.vue"
 import Main from "@/views/Main.vue";
-import PurchaseDetail from "@/views/PurchaseDetail.vue"
 import Register from "@/views/register.vue"
 import Router from 'vue-router'
 import Goodlist from '@/views/goodlist.vue';
@@ -25,12 +24,11 @@ export default new Router({
         },
         {
             path: '/mainPage',
-            name: 'Man',
+            name: 'Main',
             component:Main,
             children: [
                 { path: '', component: mainPage },
                 { path: 'user', component: User },
-                { path: 'purchaseDetail', component: PurchaseDetail },
                 {path:'goodList',component:Goodlist}
             ]
   

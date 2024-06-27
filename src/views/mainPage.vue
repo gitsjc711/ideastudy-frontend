@@ -4,7 +4,7 @@
         <el-col :span="8">
           <el-card class="box-card">
             <div class="user">
-              <img src="../assets/ye.jpg">
+              <img :src="this.user.userAvatarRequestUrl">
               <div class="userInfo">
                 <p class="name">{{ user.nickname }}</p>
                 <p class="access">{{user.role}}</p>
