@@ -1,7 +1,7 @@
 <template>
     <div class="header-container">
       <div class="l-content">
-        <el-button type="info" icon="el-icon-menu" size="mini" ></el-button>
+        <el-button icon="el-icon-menu" size="mini" @click="handleMenu"></el-button>
         <span class="text">首页</span>
       </div>
       <div class="r-content">

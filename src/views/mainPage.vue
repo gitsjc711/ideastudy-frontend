@@ -35,7 +35,7 @@
             </el-table-column>
             <el-table-column
                 prop="content"
-                label="通知标题">
+                label="通知内容">
             </el-table-column>
           </el-table>
         </el-card>
@@ -63,37 +63,56 @@
       }
 
     },
-    created(){
-      this.getUserDetail()
-      this.getNoticeList()
+    async created(){
+      await this.getUserDetail()
+      await this.getNoticeList()
     },
-    methods:{
+    methods: {  
       ...mapMutations(["updateRole","updateUid"]),
-      getUserDetail(){
-        this.$axios.post(this.baseUrl+"/user/showDetails",{
-        account:this.account,
-        },{  
-        headers: {  
-          'Content-Type': 'application/json'  
-        }}).then(
-          res=>{this.user=res.data
-          this.updateRole(this.user.role)
-          this.updateUid(this.user.id)
-        }
-        ).catch(error=>{console.error(error);})
-      },
-      getNoticeList(){
-        this.$axios.post(this.baseUrl+"/notice/findNotice",{
-          id:this.uid
-        },{  
-        headers: {  
-          'Content-Type': 'application/json'  
-        }}).then(res=>{
-          this.noticeList=res.data
-        }).catch(error=>{console.error(error);})
-      }
-    }
-  }
+      getUserDetail() {  
+        // 返回一个 Promise  
+        return new Promise((resolve, reject) => {  
+          this.$axios.post(this.baseUrl + "/user/showDetails", {  
+            account: this.account  
+          }, {  
+          headers: {  
+            'Content-Type': 'application/json'  
+          }  
+          }).then(res => {  
+            this.user = res.data;  
+            this.updateRole(this.user.role);  
+            this.updateUid(this.user.id);  
+            // 调用 resolve 以解决 Promise  
+          resolve(this.user);  
+            }).catch(error => {  
+              console.error(error);  
+              // 调用 reject 以拒绝 Promise  
+              reject(error);  
+            });  
+        });  
+      },  
+      getNoticeList() {  
+        // 返回一个 Promise  
+        return new Promise((resolve, reject) => {  
+          this.$axios.post(this.baseUrl + "/notice/findNotice", {  
+            id: this.uid  
+          }, {  
+            headers: {  
+              'Content-Type': 'application/json'  
+           }  
+          }).then(res => {  
+           this.noticeList = res.data;  
+            // 调用 resolve 以解决 Promise  
+            resolve(this.noticeList);  
+         }).catch(error => {  
+            console.error(error);  
+            // 调用 reject 以拒绝 Promise  
+            reject(error);  
+          });  
+       });  
+       }  
+     }
+  } 
   </script>
   
   <style lang="less" scoped>

@@ -34,7 +34,7 @@
   export default {
     data() {
       return {
-        isCollapse: true,
+
         menuData: [
           {
             path: '/',
@@ -44,8 +44,8 @@
             url: 'Home/home'
           },
           {
-            path: '/studentBuyCourse',
-            name: 'studentBuyCourse',
+            path: 'mainPage/goodlist',
+            name: 'goodlist',
             label: '课程搜索',
             icon: 'video-play',
             url: 'MallManage/MallManager'

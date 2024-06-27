@@ -12,7 +12,7 @@ export default new Vuex.Store({
         account:"",
         role:"",
         uid:null,
-        baseUrl:"http://localhost:8081"
+        baseUrl:"http://rtks8e.natappfree.cc"
     },
     mutations:{
         updateAccount(state,data){

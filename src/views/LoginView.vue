@@ -1,7 +1,7 @@
 <template>
-  <el-form :label-width='70' class="login-container" ref="form" :model="form" :rules="rules">
+  <el-form label-width="70" class="login-container" ref="form" :model="form" :rules="rules">
     <h3 class="login_title">系统登录</h3>
-    <el-form-item label="用户名" prop="username">
+    <el-form-item label="账号" prop="username">
       <el-input v-model="form.username" placeholder="请输入账号"></el-input>
     </el-form-item>
     <el-form-item label="密码" prop="password">
@@ -9,7 +9,7 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" style="margin-left: 105px;margin-top: 10px" @click="login">登录</el-button>
-      <el-button type="primary" style="margin-left: 105px;margin-top: 10px">注册</el-button>
+      <el-button type="text" class="register-button" style="margin-left: 30px;" @click="register">注册</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -27,15 +27,23 @@ data(){
       password:''
     },
     rules:{
-      username:[ { required: true, message: '请输入用户名', trigger: 'blur' } ],
+      username:[ { required: true, message: '请输入账号', trigger: 'blur' } ],
       password:[ { required: true, message: '请输入密码', trigger: 'blur' }]
     },
-    code:""
+    code:"",
+    user:{
+          id:null,
+          status:null,
+          account:this.account,
+          nickname:"",
+          email:"",
+          role:""
+        }
   }
 },
 methods:{
   
-  ...mapMutations(["updateAccount","updateRole"]),
+  ...mapMutations(["updateAccount","updateRole","updateUid"]),
   login(){
     this.$axios.post(this.baseUrl+"/login",{
       account:this.form.username,
@@ -52,7 +60,12 @@ methods:{
       }
     }
     ).catch(error=>{console.error(error);})
+  
+    
 
+  },
+  register() {  
+      this.$router.push('/register'); 
   }
 
 }
@@ -77,5 +90,11 @@ box-sizing: border-box;
 .el-input{
   width: 198px;
 }
+.register-button {  
+  color: gray !important;   
+  border: 1px solid transparent; 
+  background-color: transparent;  
+} 
 }
+
 </style>
