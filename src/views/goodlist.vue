@@ -5,17 +5,17 @@
       <el-form-item label="查询类型">  
         <el-select v-model="goodlistForm.queryType" placeholder="请选择">  
           <el-option label="按教师查询" value="teacher"></el-option>  
-          <el-option label="按课程查询" value="course"></el-option>  
+          <el-option label="按目录查询" value="category"></el-option>  
         </el-select>  
       </el-form-item>  
       <el-form-item v-if="goodlistForm.queryType === 'teacher'" label="教师姓名">  
         <el-input type="input" v-model="goodlistForm.teacherName"></el-input>  
       </el-form-item>  
-      <el-form-item v-if="goodlistForm.queryType === 'course'" label="课程名称">  
-        <el-input type="input" v-model="goodlistForm.courseName"></el-input>  
+      <el-form-item v-if="goodlistForm.queryType === 'category'" label="目录名称">  
+        <el-input type="input" v-model="goodlistForm.categoryName"></el-input>  
       </el-form-item>  
       <el-form-item>  
-        <el-button type="primary" >查询</el-button>  
+        <el-button type="primary" @click="searchCourse">查询</el-button>  
       </el-form-item>  
     </el-form>  
   </div>  
@@ -64,7 +64,7 @@
         label="购买"  
         width="180"  
       ><template slot-scope="scope">  
-        <button @click="addToOrder(scope.row.id,scope.row.price)">加入购物车</button>  
+        <button @click="buy(scope.row.id,scope.row.price)">购买</button>  
       </template></el-table-column>  
     </el-table>  
   </div>  
@@ -103,28 +103,45 @@ methods:{
     }
     ).catch(error=>{console.error(error);})
   },
-  addToOrder(id,price){
-    var outTradeNo = Math.floor(Math.random() * 900000) + id;
-    var outTradeNoString = outTradeNo.toString();  
-    this.$axios.post(this.baseUrl+"/order/add",
-    {
-      courseId:id,
-      userId:this.uid,
-      orderNo:outTradeNoString,
-      actualPrice:price
-    },{  
-    headers: {  
-      'Content-Type': 'application/json'  
-    }}).then(res=>{
-      this.code=res.data
-      if(this.code==="OK"){
-        alert("课程加入购物车成功")
-      }else{
-        alert(this.code)
-      }
+  buy(id,price){
+    var outTradeNo = Math.floor(Math.random() * 900000) + id; 
+    var actualPrice=price
+    var url=this.baseUrl+"/order/pay?" +  
+          "courseId=" + id + "&" +  
+          "orderNo=" + outTradeNo + "&" +  
+          "actualPrice=" + actualPrice + "&" +  
+          "userId=" +this.uid;
+    window.open(url,'_self')
+    //indow.open(url,'_blank')
+  },
+  searchCourse(){
+    if(this.goodlistForm.queryType==="teacher"){
+      this.$axios.get(this.baseUrl+"/course/findByTeacher",{
+        params:{
+          teacherName:this.goodlistForm.teacherName,
+          uid:this.uid
+        }
+      }).then((res) => {    
+        this.courses=res.data 
+      })  
+      .catch((error) => {  
+        // 请求失败时，捕获错误并处理  
+        console.error(error);  
+      });
+    }else if(this.goodlistForm.queryType==="category"){
+      this.$axios.get(this.baseUrl+"/course/findByCategory",{
+        params:{
+          categoryName:this.goodlistForm.categoryName,
+          uid:this.uid
+        }
+      }).then((res) => {    
+        this.courses=res.data 
+      })  
+      .catch((error) => {  
+        // 请求失败时，捕获错误并处理  
+        console.error(error);  
+      });
     }
-    ).catch(error=>{console.error(error);})
-    
   }
 
 }
