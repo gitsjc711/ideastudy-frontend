@@ -41,6 +41,9 @@ data(){
         }
   }
 },
+created(){
+  this.cookieLogin();
+},
 methods:{
   
   ...mapMutations(["updateAccount","updateRole","updateUid"]),
@@ -54,6 +57,7 @@ methods:{
     }}).then(res=>{this.code=res.data
       if(this.code==="OK"){
         this.updateAccount(this.form.username)
+        document.cookie=`loginStatus=true,username=${this.form.username}`
         this.$router.push('/mainPage');  
       }else{
         alert('登录失败');  
@@ -66,8 +70,22 @@ methods:{
   },
   register() {  
       this.$router.push('/register'); 
-  }
+  },
+  cookieLogin(){
+    if(this.getCookie("loginStatus")==="true"){
+      this.updateAccount(this.getCookie("username"))
+      this.$router.push('/mainPage')
+    }
 
+  },
+  getCookie(cookiename){
+    const cookies = document.cookie.split(",")
+    for(let i=0;i<cookies.length;i++){
+        const cookie = cookies[i].split('=');
+        if(cookie[0]==cookiename) return cookie[1];
+    }
+    return "";
+ }
 }
 }
 </script>
