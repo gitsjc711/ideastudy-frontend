@@ -111,7 +111,27 @@ methods:{
           "orderNo=" + outTradeNo + "&" +  
           "actualPrice=" + actualPrice + "&" +  
           "userId=" +this.uid;
-    window.open(url,'_self')
+    if(actualPrice===0){
+      this.$axios.post(this.baseUrl+"/order/free",{
+        courseId:id,
+        orderNo:outTradeNo,
+        actualPrice:actualPrice,
+        userId:this.uid
+    },{  
+    headers: {  
+      'Content-Type': 'application/json'  
+    }}).then(res=>{this.code=res.data
+      if(this.code==="OK"){
+        alert("加入免费课程成功")
+      }else{
+        alert('课程入库失败');  
+      }
+    }
+    ).catch(error=>{console.error(error);})
+
+    }else{
+      window.open(url,'_self')
+    }
     //indow.open(url,'_blank')
   },
   searchCourse(){
@@ -141,6 +161,7 @@ methods:{
         // 请求失败时，捕获错误并处理  
         console.error(error);  
       });
+      this.getCourse()
     }
   }
 
