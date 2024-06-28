@@ -31,7 +31,6 @@
     </div>  
   </template>
   <script>
-  import axios from 'axios';
   
   export default {
     data() {
@@ -39,9 +38,8 @@
             courses: []
         };
     },
-    async created() {
-        const response = await axios.get('http://localhost:8080/courses');
-        this.courses = response.data;
+    created() {
+       
     }
   };
   </script>

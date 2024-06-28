@@ -9,7 +9,7 @@
         >  
           <el-card class="box-card">  
             <div class="text item">  
-              <img :src="course.image" alt="商品图片" class="product-image" />  
+              <img :src="course.courseLogoRequestUrl" alt="商品图片" class="product-image" />  
               <div class="clearfix">  
                 <span>{{ course.name }}</span>  
               </div>  
@@ -21,46 +21,36 @@
     </div>  
   </template>  
     
-  <script>  
-  export default {  
+  <script>
+  import { mapState} from 'vuex';
+  
+  export default { 
+    computed:{
+    ...mapState(["baseUrl","uid"])
+    }, 
     data() {  
       return {  
-        courses: [  
-          {  
-            name: '计算机系统三',  
-            description: '必修课程',  
-            image: require('@/assets/logo.png') // 使用 webpack 的 require 引入图片资源  
-          },  
-          {  
-            name: '数据结构与算法',  
-            description: '必修课程',  
-            image: require('@/assets/background.jpg') // 另一个图片资源  
-          },  
-          {  
-            name: '数据结构与算法',  
-            description: '必修课程',  
-            image: require('@/assets/background.jpg') // 另一个图片资源  
-          },  
-          {  
-            name: '数据结构与算法',  
-            description: '必修课程',  
-            image: require('@/assets/background.jpg') // 另一个图片资源  
-          },  
-          {  
-            name: '数据结构与算法',  
-            description: '必修课程',  
-            image: require('@/assets/background.jpg') // 另一个图片资源  
-          },  
-          {  
-            name: '数据结构与算法',  
-            description: '必修课程',  
-            image: require('@/assets/background.jpg') // 另一个图片资源  
-          },  
-          // ... 可以继续添加更多课程  
-        ]  
+        courses: []  
       };  
-    }  
-  };  
+    },
+    created(){
+      this.getMyLesson()
+    },
+    methods:{
+      getMyLesson(){
+        this.$axios.post(this.baseUrl+"/course/findMyCourse",{
+          id:this.uid
+        },{  
+          headers: {  
+          'Content-Type': 'application/json'  
+        }}).then(res=>{this.courses=res.data
+        }
+        ).catch(error=>{console.error(error);})
+        }
+    } 
+  };
+  
+
   </script> 
       
     <!-- <script>  

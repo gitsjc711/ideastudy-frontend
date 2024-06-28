@@ -11,7 +11,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item><el-button @click="handleLogout">退出</el-button></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -26,8 +26,29 @@ export default {
   methods: {
     handleMenu(){
       this.$store.commit('collapseMenu')
+    },
+    handleLogout(){
+      this.delCookie("loginStatus")
+      this.$router.push('/')
+    },
+    delCookie (name) {
+	    var exp = new Date();
+	    exp.setTime(exp.getTime() - 1);
+	    var cval =this.getCookie(name);
+	    if (cval&& typeof cval === 'string' && cval.length > 0){
+	 	    document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString()+ ";path=/";
+	    }
+    },
+    getCookie(cookiename){
+    const cookies = document.cookie.split(",")
+      for(let i=0;i<cookies.length;i++){
+        const cookie = cookies[i].split('=');
+        if(cookie[0]==cookiename) return cookie[1];
     }
-  },
+    return "";
+    }
+    
+  }
 }
 </script>
   
