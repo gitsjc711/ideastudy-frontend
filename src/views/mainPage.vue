@@ -68,8 +68,11 @@
       await this.getNoticeList()
     },
     methods: {  
-      ...mapMutations(["updateRole","updateUid"]),
-      getUserDetail() {  
+      ...mapMutations(["updateRole","updateUid","updateAccount"]),
+      getUserDetail() {
+        if(this.getCookie("loginStatus")==="true"){
+          this.updateAccount(this.getCookie("username"))
+        }
         // 返回一个 Promise  
         return new Promise((resolve, reject) => {  
           this.$axios.post(this.baseUrl + "/user/showDetails", {  
@@ -110,7 +113,15 @@
             reject(error);  
           });  
        });  
-       }  
+       },
+       getCookie(cookiename){
+        const cookies = document.cookie.split(",")
+        for(let i=0;i<cookies.length;i++){
+          const cookie = cookies[i].split('=');
+            if(cookie[0]==cookiename) return cookie[1];
+          }
+        return "";
+      }
      }
   } 
   </script>

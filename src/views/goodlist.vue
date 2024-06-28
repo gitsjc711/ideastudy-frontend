@@ -175,7 +175,6 @@ methods:{
         // 请求失败时，捕获错误并处理  
         console.error(error);  
       });
-      this.getCourse()
     }
   }
 

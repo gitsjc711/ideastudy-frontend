@@ -35,7 +35,6 @@
   </template>
 
   <script>  
-  import qs from "qs"
   import { mapState} from 'vuex';
   export default {  
     computed:{
