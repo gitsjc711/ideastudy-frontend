@@ -83,7 +83,7 @@
             this.updateRole(this.user.role);  
             this.updateUid(this.user.id);  
             // 调用 resolve 以解决 Promise  
-          resolve(this.user);  
+            resolve(this.user);  
             }).catch(error => {  
               console.error(error);  
               // 调用 reject 以拒绝 Promise  
