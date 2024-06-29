@@ -6,7 +6,7 @@
         :highlight-current="true"  
         @node-click="handleNodeClick"  
     >  
-        <template slot-scope="{ node, data }">  
+        <template slot-scope="{ node }">  <!--可以变成{node,data}来访问data数据-->
             <div>   
                 <i v-if="isFirstLevel(node)" class="el-icon-s-unfold"></i>
                 <span>{{ node.label }}</span>
@@ -41,8 +41,6 @@ export default {
                 headers: {  
                     'Content-Type': 'application/json'  
                 }}).then(res=>{this.data=res.data
-                    console.log(res.data)
-                    console.log(this.data)
                 }
             ).catch(error=>{console.error(error);})
         },

@@ -31,7 +31,7 @@
         <div class="course-grid">  
     <h1 style="text-align: center;" >资源列表</h1>  
     <el-table  
-      :data="courses"  
+      :data="data"  
       style="width: 100%"  
       stripe  
     >  
@@ -46,11 +46,13 @@
 </el-table-column> 
        
       <el-table-column  
-        prop="name"  
-      
+        prop="label"  
         flex="1"  
       ></el-table-column>  
-      
+      <el-table-column  
+        prop="url"  
+        flex="1"  
+      ></el-table-column>   
     </el-table>  
 
   </div> 
@@ -59,10 +61,13 @@
     </div>
   </template>
   <script>
-
+ import { mapState} from 'vuex';
   
   export default {
     name: "Home",
+    computed:{
+ ...mapState(["account","baseUrl","uid","courseId"]),
+},
     data(){
       return{
         dialogVisible: false,
@@ -90,39 +95,11 @@
         tableData: [],
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
 
-        courses: [  
-        {  
-          name: '计算机系统三',  
-          description: '必修课程',  
-        
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-           
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-         
-        },  
-      ]  
+        data: []
       }
+    },
+    created(){
+      this.findResource()
     },
     methods: {
       // 用户提交表单
@@ -184,6 +161,16 @@
       handleAdd(){
       this.modalType = 0;
       this.dialogVisible = true;
+      },
+      findResource(){
+        this.$axios.post(this.baseUrl+"/resource/findResourceByCourse",{
+                id:this.courseId
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.data=res.data
+                }
+            ).catch(error=>{console.error(error);})
       }
     },
  }

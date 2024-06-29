@@ -34,7 +34,7 @@
         <div class="course-grid">  
     <h1 style="text-align: center;" >通知列表</h1>  
     <el-table  
-      :data="courses"  
+      :data="notices"  
       style="width: 100%"  
       stripe  
     >  
@@ -49,12 +49,12 @@
 </el-table-column> 
        
       <el-table-column  
-        prop="name"  
+        prop="title"  
         label="通知主题"  
         width="300"  
       ></el-table-column>  
       <el-table-column  
-        prop="description"  
+        prop="content"  
         label="通知描述"  
         width="800"  
       ></el-table-column>  
@@ -68,9 +68,12 @@
   </template>
   <script>
 
-  
+import { mapState} from 'vuex';
   export default {
     name: "Home",
+    computed:{
+ ...mapState(["account","baseUrl","uid","courseId"]),
+},
     data(){
       return{
         dialogVisible: false,
@@ -88,49 +91,16 @@
           describe: [
             {required: true, message: '请输入课程描述', trigger: 'blur'},
           ],
-          category: [
-            {required: true, message: '请输入课程目录', trigger: 'blur'},
-          ],
-          price: [
-            {required: true, message: '请输入课程价格', trigger: 'blur'},
-          ],
+         
         },
         tableData: [],
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
 
-        courses: [  
-        {  
-          name: '计算机系统三',  
-          description: '必修课程',  
-        
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-           
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-          
-        },  
-        {  
-          name: '数据结构与算法',  
-          description: '必修课程',  
-         
-        },  
-      ]  
+        notices:[]
       }
+    },
+    created(){
+      this.findNotices()
     },
     methods: {
       // 用户提交表单
@@ -192,8 +162,19 @@
       handleAdd(){
       this.modalType = 0;
       this.dialogVisible = true;
-      }
+      },
+      findNotices(){
+      this.$axios.post(this.baseUrl+"/notice/findNoticeByCourse",{
+                id:this.courseId
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.notices=res.data
+                }
+            ).catch(error=>{console.error(error);})
+    }
     },
+    
  }
   
   </script>
