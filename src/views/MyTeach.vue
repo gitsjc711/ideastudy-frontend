@@ -74,7 +74,7 @@
     </div>
   </template>
   <script>
-import { Col } from 'element-ui';
+
 import { mapGetters, mapState} from 'vuex';
   
   export default {

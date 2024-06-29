@@ -25,7 +25,16 @@
           <el-button @click="sendEmail" type="primary" size="mini">发送验证码</el-button>    
         </el-form-item>
         <el-form-item label="头像">
-          <input type="file" @change="getFile($event)">  
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl"
+            auto-upload="true"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>   
         <el-form-item>    
           <el-button  type="primary" @click="submitForm('registerForm')">注册</el-button>    
@@ -35,7 +44,8 @@
   </template>
 
   <script>  
-  import { mapState} from 'vuex';
+ import { mapGetters, mapState} from 'vuex';
+  
   export default {  
     computed:{
     ...mapState(["baseUrl"])
@@ -56,8 +66,8 @@
             this.$refs.registerForm.validateField('checkPass');  
           }  
           callback();  
-        }  
-      };  
+        };
+      };
       var validateEmail = (rule, value, callback) => {  
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;  
         if (value === '') {  
@@ -75,8 +85,10 @@
           role:'',
           email: '',  
           code:'',
-        },  
-        avatar:null,
+        }, 
+        imageUrl:"",
+        uploadUrl:this.getBaseurl()+"/file/upload",
+        url:"" , 
         fileList: [],
         rules: {  
           account: [  
@@ -96,6 +108,7 @@
       };  
     },  
     methods: {  
+      ...mapGetters(["getBaseurl"]),
       submitForm(formName) {  
         this.$refs[formName].validate((valid) => {  
           if (valid) {  
@@ -107,8 +120,9 @@
               }  
             } 
             formData.append('role', this.registerForm.queryType); 
-            var fileInput = this.avatar;  
-            formData.append('avatar', fileInput);  
+            if(this.url){
+            formData.append("avatar",this.url)
+            this.passwordStrength()
             if(this.strength==null||this.strength!="强"){
           alert("密码强度不够")
         }
@@ -120,7 +134,7 @@
             }).then(res => {  
               this.errorCode = res.data;
               if(this.errorCode==="OK"){
-
+                this.$router.push('/')
               } else{
                 alert(this.errorCode)
               } 
@@ -128,8 +142,12 @@
               console.error(error);  
             });
           }
+        }else{
+          alert("请等待文件上传")
+        }
           }  
         });
+      
 
       },
       sendEmail(){
@@ -154,10 +172,6 @@
            ).catch(error=>{console.error(error);}) 
         }      
       },
-      getFile(event) {
-            this.avatar = event.target.files[0];
-            console.log(this.avatar);
-          },
       passwordStrength(){
         this.passwordLevel=0;
         if(this.registerForm.password.match(/[0-9]/g)){this.passwordLevel++}
@@ -166,12 +180,30 @@
         if(this.registerForm.passwordLevel>3){this.passwordLevel=3}
         if(this.registerForm.password.length<6){this.passwordLevel=0}
         this.strength=this.strengthList[this.passwordLevel]
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.url=res
+        alert("上传头像成功")
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
       }
+    }
      
   
 
     }  
-  };  
+  
   </script>  
     
     <style lang="less" scoped>  
