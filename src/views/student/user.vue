@@ -1,73 +1,126 @@
-<template>  
-    <div>  
-      <h1 style="text-align: center;">课程表</h1>  
-      <el-table  
-        :data="courses"  
-        style="width: 100%"  
-        border  
-        stripe  
-      >  
-        <el-table-column  
-          prop="id"  
-          label="课程ID"  
-          width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="name"  
-          label="课程名称"  
-          width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="teacher.name"  
-          label="任课教师"  
-          width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="description"  
-          label="课程状态"  
-          width="180"  
-        ></el-table-column>  
-      </el-table>  
-    </div>  
-  </template>
-  <script>
-  
-  export default {
-    data() {
-        return {
-            courses: []
-        };
-    },
-    created() {
+<template>
+  <div class="container">
+    <el-row>
        
+      <img :src="this.user.userAvatarRequestUrl"> 
+          <div class="user">
+            <div class="userInfo">
+              <p class="name">昵称: <span>{{ user.nickname }}</span></p>
+              
+            </div>
+          </div>
+          <div class="login-info">  
+            <p class="access">身份<span>{{user.role}}</span></p>
+            <p>邮箱<span>{{ user.email }}</span></p>
+          </div>
+        
+    </el-row>
+  </div>
+  </template>
+
+<script>
+import { mapState,mapMutations} from 'vuex';
+export default {
+  name: "HomeIfo",
+  computed:{
+...mapState(["account","baseUrl","uid"]),
+},
+  data() {
+    return {
+      user:{
+        id:null,
+        status:null,
+        account:this.account,
+        nickname:"",
+        email:"",
+        role:""
+      },
+      noticeList:[]
     }
-  };
-  </script>
-  
-  <style>
-  table {
-    margin: 0 auto;
-    /* Center the table horizontally */
-    width: 80%;
-    /* Adjust the width of the table */
-    font-size: 16px;
-    /* Increase the font size for better readability */
+
+  },
+  created(){
+    this.getUserDetail()
+    this.getNoticeList()
+  },
+  methods:{
+    ...mapMutations(["updateRole","updateUid"]),
+    getUserDetail(){
+      this.$axios.post(this.baseUrl+"/user/showDetails",{
+      account:this.account,
+      },{  
+      headers: {  
+        'Content-Type': 'application/json'  
+      }}).then(
+        res=>{this.user=res.data
+        this.updateRole(this.user.role)
+        this.updateUid(this.user.id)
+      }
+      ).catch(error=>{console.error(error);})
+    },
+    getNoticeList(){
+      this.$axios.post(this.baseUrl+"/notice/findNotice",{
+        id:this.uid
+      },{  
+      headers: {  
+        'Content-Type': 'application/json'  
+      }}).then(res=>{
+        this.noticeList=res.data
+      }).catch(error=>{console.error(error);})
+    }
   }
-  
-  th,
-  td {
-    padding: 10px;
-    /* Add padding to the table cells */
-    text-align: center;
-    /* Center the content of the table cells */
+}
+</script>
+
+<style lang="less" scoped>
+.container {  
+  display: flex;  
+  margin-left: auto;  
+  margin-right: auto;
+  width:70%;
+  background-color: rgba(255, 255, 255, 0.5);
+  justify-content: center; /* 使内容水平居中 */  
+  height: 100vh; /* 如果需要的话，设置容器高度为视口高度 */  
+} 
+.box-card {  
+  border: none;
+  width:100%;
+  background-color: rgba(255, 255, 255, 0.5); /* 白色背景，50%透明度 */  
+  } 
+
+img{
+    margin-right: 40px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
   }
-  
-  h1 {
-    text-align: center;
-    /* Center the heading */
-    font-size: 24px;
-    /* Increase the font size for better visibility */
-    margin-bottom: 20px;
-    /* Add some space below the heading */
+.user{
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .userInfo{
+    .name{
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .access{
+      color: #999999;
+    }
   }
-  </style>
+}
+
+.login-info{
+  p{
+    line-height: 28px;
+    font-size: 14px;
+    color: #665d5d;
+    span{
+      color: #666666;
+      margin-left: 60px;
+    }
+  }
+}
+</style>

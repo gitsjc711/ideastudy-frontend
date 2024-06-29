@@ -8,6 +8,10 @@ import MyCourse from "@/views/MyCourse.vue"
 import MyTeach from "@/views/MyTeach.vue"
 import Register from "@/views/register.vue"
 import Goodlist from "@/views/goodlist.vue"
+import Chapter from "@/views/teacher/chapter.vue"
+import HomeWork from "@/views/teacher/homework.vue"
+import Notice from "@/views/teacher/notice.vue"
+import Data from "@/views/teacher/data.vue"
 import Router from 'vue-router'
 
 Vue.use(Router)
@@ -34,8 +38,22 @@ export default new Router({
                 { path: 'MyCourse', component: MyCourse },
                 { path: 'goodlist', component: Goodlist },
                 { path: 'MyTeach', component: MyTeach },
-            ]
-  
+            ],
+            redirect:'/mainPage/',
+        },
+        
+        {
+            path: '/course',
+            name: 'course',
+            component:Main,
+            children: [
+                { path: 'chapter', component: Chapter },
+                { path: 'homework', component: HomeWork },
+                { path: 'notice', component:Notice },
+                { path: 'data', component: Data },
+               
+            ],
+            redirect:'/course/chapter',
         },
        
        

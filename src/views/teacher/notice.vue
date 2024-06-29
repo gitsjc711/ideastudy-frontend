@@ -1,23 +1,23 @@
 <template>
     <div class="manage">
       <el-dialog
-          title="发布作业"
+          title="添加课程"
           :visible.sync="dialogVisible"
           :before-close="handleClose"
           width="50%">
         <!--表单数据-->
         <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="作业标题" prop="name">
-            <el-input v-model="form.name" placeholder="请输入作业标题" style="width: 50%;"></el-input>
+          <el-form-item label="通知标题" prop="name">
+            <el-input v-model="form.name" placeholder="请输入通知标题" style="width: 50%;"></el-input>
           </el-form-item>
 
           
-          <el-form-item label="内容" prop="describe">
+          <el-form-item label="正文" prop="describe">
             <el-input  type="textarea"
                        style="width: 50%;"
                        :rows="4" 
                        v-model="form.describe" 
-                       placeholder="请输入内容">
+                       placeholder="请输入正文">
                     </el-input>
           </el-form-item>
         </el-form>
@@ -28,11 +28,11 @@
         </span>
       </el-dialog>
       <div class="manage-header">
-        <el-button type="primary" @click="handleAdd">+ 新建作业</el-button>
+        <el-button type="primary" @click="handleAdd">+ 新增通知</el-button>
         
 
         <div class="course-grid">  
-    <h1 style="text-align: center;" >作业列表</h1>  
+    <h1 style="text-align: center;" >通知列表</h1>  
     <el-table  
       :data="courses"  
       style="width: 100%"  
@@ -44,20 +44,21 @@
 >  
    <template slot-scope="scope">  
     <!-- 使用 img 标签来显示图片 -->  
-    <img src="../../assets/作业.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
+    <img src="../../assets/通知.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
    </template>  
 </el-table-column> 
        
       <el-table-column  
-        prop="name" 
-        label="作业标题"    
-        width="180" 
-      ></el-table-column>   
+        prop="name"  
+        label="通知主题"  
+        width="300"  
+      ></el-table-column>  
       <el-table-column  
-        prop="description" 
-        label="作业正文"    
-        flex="1"  
-      ></el-table-column> 
+        prop="description"  
+        label="通知描述"  
+        width="800"  
+      ></el-table-column>  
+      
     </el-table>  
 
   </div> 
@@ -75,7 +76,8 @@
         dialogVisible: false,
         form:{
           name:'',
-          description:'',
+          describe:'',
+          
          // image:[]
              },
 

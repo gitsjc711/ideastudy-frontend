@@ -1,25 +1,22 @@
 <template>
     <div class="manage">
       <el-dialog
-          title="发布作业"
+          title="添加课程"
           :visible.sync="dialogVisible"
           :before-close="handleClose"
           width="50%">
         <!--表单数据-->
         <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="作业标题" prop="name">
-            <el-input v-model="form.name" placeholder="请输入作业标题" style="width: 50%;"></el-input>
-          </el-form-item>
-
-          
-          <el-form-item label="内容" prop="describe">
-            <el-input  type="textarea"
-                       style="width: 50%;"
-                       :rows="4" 
-                       v-model="form.describe" 
-                       placeholder="请输入内容">
-                    </el-input>
-          </el-form-item>
+          <el-upload  
+                       class="upload-demo"  
+                       drag  
+                       action="YOUR_ACTUAL_UPLOAD_URL" 
+                       :on-success="handleSuccess"  
+                       :before-upload="beforeUpload"  
+                        multiple>            
+                        <i class="el-icon-upload"></i>  
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>  
+            </el-upload> 
         </el-form>
   
         <span slot="footer" class="dialog-footer">
@@ -28,36 +25,32 @@
         </span>
       </el-dialog>
       <div class="manage-header">
-        <el-button type="primary" @click="handleAdd">+ 新建作业</el-button>
+        <el-button type="primary" @click="handleAdd">+ 添加资料</el-button>
         
 
         <div class="course-grid">  
-    <h1 style="text-align: center;" >作业列表</h1>  
+    <h1 style="text-align: center;" >资源列表</h1>  
     <el-table  
       :data="courses"  
       style="width: 100%"  
       stripe  
     >  
     <el-table-column  
-      label="课程图片"  
+      label="全部文件"  
       width="180"  
 >  
    <template slot-scope="scope">  
     <!-- 使用 img 标签来显示图片 -->  
-    <img src="../../assets/作业.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
+    <img src="../../assets/资料.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
    </template>  
 </el-table-column> 
        
       <el-table-column  
-        prop="name" 
-        label="作业标题"    
-        width="180" 
-      ></el-table-column>   
-      <el-table-column  
-        prop="description" 
-        label="作业正文"    
+        prop="name"  
+      
         flex="1"  
-      ></el-table-column> 
+      ></el-table-column>  
+      
     </el-table>  
 
   </div> 
@@ -75,7 +68,8 @@
         dialogVisible: false,
         form:{
           name:'',
-          description:'',
+          describe:'',
+          
          // image:[]
              },
 

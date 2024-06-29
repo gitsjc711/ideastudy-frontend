@@ -14,6 +14,8 @@
                 <span>{{ course.name }}</span>  
               </div>  
               <p>{{ course.description }}</p>  
+              <div class="button">
+            <el-button  type="info" plain round  size="small" @click="findDetail()">查看详情</el-button></div>
             </div>  
           </el-card>  
         </div>  
@@ -46,7 +48,10 @@
         }}).then(res=>{this.courses=res.data
         }
         ).catch(error=>{console.error(error);})
-        }
+        },
+        findDetail(){
+      this.$router.push({ path: '/course/chapter' }); 
+     }
     } 
   };
   
