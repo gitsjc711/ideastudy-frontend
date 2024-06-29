@@ -11,7 +11,6 @@ Vue.use(router)
 Vue.use(ElementUI);
 Vue.prototype.$axios = axios
 
-
 new Vue({
   router,
   store,

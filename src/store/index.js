@@ -12,7 +12,7 @@ export default new Vuex.Store({
         account:"",
         role:"",
         uid:null,
-        baseUrl:" http://g8wfg9.natappfree.cc"
+        baseUrl:"http://x6n6wc.natappfree.cc"
     },
     mutations:{
         updateAccount(state,data){
@@ -24,5 +24,10 @@ export default new Vuex.Store({
         updateUid(state,data){
           state.uid=data
         }
+     },
+     getters:{
+      getBaseurl(state){
+        return state.baseUrl
+      } 
      }
 })
