@@ -9,101 +9,49 @@
         <template slot-scope="{ node, data }">  
             <div>   
                 <i v-if="isFirstLevel(node)" class="el-icon-s-unfold"></i>
-                <span>{{ node.label }}</span>  
+                <span>{{ node.label }}</span>
             </div>  
         </template>  
     </el-tree>  
 </template>  
 <script>
+ import { mapState,mapMutations} from 'vuex';
 export default {
+    computed:{
+ ...mapState(["account","baseUrl","uid","courseId"]),
+},
     data() {
         return {
-            data: [
-                {
-                    label: "一级 1",
-                    number: 2,
-                    children: [
-                        {
-                            label: "二级 1-1",
-                            number: 2,
-                            children: [
-                                {
-                                    label: "三级 1-1-1",
-                                    number: 12,
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    label: "一级 2",
-                    number: 23,
-                    children: [
-                        {
-                            label: "二级 2-1",
-                            number: 222,
-                            children: [
-                                {
-                                    label: "三级 2-1-1",
-                                    number: 21,
-                                },
-                            ],
-                        },
-                        {
-                            label: "二级 2-2",
-                            number: 1,
-                            children: [
-                                {
-                                    label: "三级 2-2-1",
-                                    number: 0,
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    label: "一级 3",
-                    number: 12,
-                    children: [
-                        {
-                            label: "二级 3-1",
-                            number: 2,
-                            children: [
-                                {
-                                    label: "三级 3-1-1",
-                                    number: 234,
-                                },
-                            ],
-                        },
-                        {
-                            label: "二级 3-2",
-                            number: 2,
-                            children: [
-                                {
-                                    label: "三级 3-2-1",
-                                    number: 2,
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
+            data: [],
             defaultProps: {
                 children: "children",
                 label: "label",
             },
         };
     },
+    created(){
+      this.findChapter()
+    },
     methods: {
+        
+        findChapter(){
+            this.$axios.post(this.baseUrl+"/chapter/findChapter",{
+                id:this.courseId
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.data=res.data
+                    console.log(res.data)
+                    console.log(this.data)
+                }
+            ).catch(error=>{console.error(error);})
+        },
         handleNodeClick(data) {
             console.log(data);
         },
-        isFirstLevel(node) {  
-            // 假设根节点的 level 是 0，第一级子节点的 level 是 1  
+        isFirstLevel(node) {    
             return node.level === 1;  
         },  
-        // 注意：Element UI 的 el-tree 并没有直接提供节点展开/收起的监听事件  
-        // 你可能需要通过其他方式（如递归遍历节点并设置状态）来模拟这个功能  
     },
 };
 </script>

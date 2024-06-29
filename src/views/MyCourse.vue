@@ -15,7 +15,7 @@
               </div>  
               <p>{{ course.description }}</p>  
               <div class="button">
-            <el-button  type="info" plain round  size="small" @click="findDetail()">查看详情</el-button></div>
+            <el-button  type="info" plain round  size="small" @click="findDetail(course.id)">查看详情</el-button></div>
             </div>  
           </el-card>  
         </div>  
@@ -24,7 +24,7 @@
   </template>  
     
   <script>
-  import { mapState} from 'vuex';
+  import { mapState,mapMutations} from 'vuex';
   
   export default { 
     computed:{
@@ -39,6 +39,7 @@
       this.getMyLesson()
     },
     methods:{
+      ...mapMutations(["updateCourseId"]),
       getMyLesson(){
         this.$axios.post(this.baseUrl+"/course/findMyCourse",{
           id:this.uid
@@ -49,9 +50,12 @@
         }
         ).catch(error=>{console.error(error);})
         },
-        findDetail(){
-      this.$router.push({ path: '/course/chapter' }); 
-     }
+        findDetail(id){
+          this.updateCourseId(id),
+          this.$router.push(
+            { path: '/course/chapter'
+          }); 
+      }
     } 
   };
   

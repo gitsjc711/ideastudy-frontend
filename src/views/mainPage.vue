@@ -83,7 +83,7 @@
           }  
           }).then(res => {  
             this.user = res.data;  
-            this.updateRole(this.user.role);  
+            this.updateRole(this.user.role);
             this.updateUid(this.user.id);  
             // 调用 resolve 以解决 Promise  
             resolve(this.user);  
