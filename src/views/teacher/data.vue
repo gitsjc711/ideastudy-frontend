@@ -56,10 +56,12 @@
         prop="label"  
         flex="1"  
       ></el-table-column>  
-      <el-table-column  
-        prop="url"  
+      <el-table-column    
         flex="1"  
-      ></el-table-column>   
+      ><template slot-scope="scope">  
+        <button @click="learn(scope.row.url)">学习</button>  
+      </template>
+    </el-table-column>  
     </el-table>  
 
   </div> 
@@ -193,6 +195,9 @@
                 reject(error)
             })
             })
+      },
+      learn(url){
+        window.open(url,"_blank")
       }
     },
  }
