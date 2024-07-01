@@ -10,7 +10,7 @@
             <img class="user" src="../assets/logo.png"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item><el-button @click="handleGoToMainpage">主页</el-button></el-dropdown-item>
             <el-dropdown-item><el-button @click="handleLogout">退出</el-button></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -30,6 +30,9 @@ export default {
     handleLogout(){
       this.delCookie("loginStatus")
       this.$router.push('/')
+    },
+    handleGoToMainpage(){
+      this.$router.push("/")
     },
     delCookie (name) {
 	    var exp = new Date();

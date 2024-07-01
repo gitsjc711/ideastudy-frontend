@@ -12,13 +12,8 @@
           </el-form-item>
 
           
-          <el-form-item label="章节内容" prop="content">
-            <el-input  type="textarea"
-                       style="width: 50%;"
-                       :rows="4" 
-                       v-model="form.content" 
-                       placeholder="请输入内容">
-                    </el-input>
+          <el-form-item label="章节顺序" prop="order">
+            <el-input v-model="form.order" placeholder="请输入章节顺序" style="width: 50%;"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -61,19 +56,20 @@ export default {
             dialogVisible: false,
       form:{
         name:'',
-        content:''
+        order:null
       },
       rules: {
           name: [
             {required: true, message: '请输入章节标题', trigger: 'blur'},
           ],
-          content: [
-            {required: true, message: '请输入章节内容', trigger: 'blur'},
+          order: [
+            {required: true, message: '请输入章节顺序', trigger: 'blur'},
           ],
         },
         tableData: [],
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
         };
+        errorCode:null
     },
   
     created(){
@@ -81,14 +77,38 @@ export default {
     },
     methods: {
         findChapter(){
+            return new Promise((resolve, reject) => {
             this.$axios.post(this.baseUrl+"/chapter/findChapter",{
                 id:this.courseId
             },{  
                 headers: {  
                     'Content-Type': 'application/json'  
                 }}).then(res=>{this.data=res.data
+                    resolve(this.data)
                 }
-            ).catch(error=>{console.error(error);})
+            ).catch(error=>{console.error(error);
+                reject(error)
+            })
+            })
+        },
+        addChapter(){
+            return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/chapter/add",{
+                courseId:this.courseId,
+                chapterOrder:this.form.order,
+                name:this.form.name
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
         },
         handleNodeClick(data) {
             console.log(data);
@@ -97,19 +117,10 @@ export default {
             return node.level === 1;  
         }, 
         submit(){
-        this.$refs.form.validate((valid)=>{
+        this.$refs.form.validate(async (valid)=>{
           if(valid){
-            // 后续操作
-            if(this.modalType === 0){
-              addUser(this.form).then(()=>{
-                // 重新获取列表接口
-                this.getList();
-              })
-            }else{
-              editUser(this.form).then(()=>{
-                this.getList();
-              });
-            }
+            await this.addChapter()
+            await this.findChapter()
             console.log(this.form);
             // 关闭弹窗
             this.dialogVisible = false;
