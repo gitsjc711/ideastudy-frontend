@@ -143,15 +143,17 @@
       alert("文件上传成功") 
     },  
     beforeUpload(file) {  
-      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';  
+      const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png'; 
+      const isPDF=file.type==='application/pdf'
+      const isMP4=file.type==='video/mp4'
       const isLt100M = file.size / 1024 / 1024 < 100;  
   
-      if (!isJPGorPNG) {  
-        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');  
+      if (!(isJPGorPNG||isPDF||isMP4)) {  
+        this.$message.error('上传文件只能是 JPG/PNG/PDF/MP4格式!');  
         return false;  
       }  
       if (!isLt100M) {  
-        this.$message.error('上传头像图片大小不能超过 100MB!');  
+        this.$message.error('上传文件大小不能超过 100MB!');  
         return false;  
       }  
       return true;  

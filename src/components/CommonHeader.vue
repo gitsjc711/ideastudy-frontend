@@ -5,13 +5,13 @@
         <span class="text">首页</span>
       </div>
       <div class="r-content">
-        <el-dropdown>
+        <el-dropdown  @command="handleCommand">
           <span class="el-dropdown-link">
             <img class="user" src="../assets/logo.png"/>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item><el-button @click="handleGoToMainpage">主页</el-button></el-dropdown-item>
-            <el-dropdown-item><el-button @click="handleLogout">退出</el-button></el-dropdown-item>
+            <el-dropdown-item command="handleGoToMainpage">主页</el-dropdown-item>
+            <el-dropdown-item command="handleLogout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -27,6 +27,17 @@ export default {
     handleMenu(){
       this.$store.commit('collapseMenu')
     },
+    handleCommand(command){
+    if(command==="handleLogout"){
+      console.log("退出")
+      this.delCookie("loginStatus")
+      this.$router.push('/')
+    }
+    if(command==="handleGoToMainpage"){
+      console.log("个人主页")
+      this.$router.push("/")
+    }
+  },
     handleLogout(){
       this.delCookie("loginStatus")
       this.$router.push('/')
