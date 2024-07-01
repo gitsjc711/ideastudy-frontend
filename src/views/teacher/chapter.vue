@@ -1,4 +1,4 @@
-<template>  
+<template> 
     <el-tree  
         class="tree"  
         :data="data"  

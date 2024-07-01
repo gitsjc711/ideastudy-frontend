@@ -12,8 +12,9 @@ export default new Vuex.Store({
         account:"",
         role:"",
         uid:null,
-        baseUrl:"http://x6n6wc.natappfree.cc",
-        courseId:null
+        baseUrl:"http://ehxzvj.natappfree.cc",
+        courseId:null,
+        isTeacher:null
     },
     mutations:{
         updateAccount(state,data){
