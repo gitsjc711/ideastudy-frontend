@@ -42,7 +42,7 @@
       label="课程图片"  
       width="180"  
 >  
-   <template slot-scope="scope">  
+   <template>  
     <!-- 使用 img 标签来显示图片 -->  
     <img src="../../assets/作业.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
    </template>  

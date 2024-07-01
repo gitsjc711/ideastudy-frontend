@@ -12,11 +12,11 @@
           </el-form-item>
 
           
-          <el-form-item label="正文" prop="describe">
+          <el-form-item label="正文" prop="content">
             <el-input  type="textarea"
                        style="width: 50%;"
                        :rows="4" 
-                       v-model="form.describe" 
+                       v-model="form.content" 
                        placeholder="请输入正文">
                     </el-input>
           </el-form-item>
@@ -42,7 +42,7 @@
       label="课程图片"  
       width="180"  
 >  
-   <template slot-scope="scope">  
+   <template>  
     <!-- 使用 img 标签来显示图片 -->  
     <img src="../../assets/通知.jpg" :style="{ width: '40px', height: '35px', borderRadius: '10%' }"  alt="课程图片">  
    </template>  
@@ -79,17 +79,17 @@ import { mapState} from 'vuex';
         dialogVisible: false,
         form:{
           name:'',
-          describe:'',
+          content:'',
           
          // image:[]
              },
 
         rules: {
           name: [
-            {required: true, message: '请输入课程名', trigger: 'blur'},
+            {required: true, message: '请输入通知标题', trigger: 'blur'},
           ],
-          describe: [
-            {required: true, message: '请输入课程描述', trigger: 'blur'},
+          content: [
+            {required: true, message: '请输入通知正文', trigger: 'blur'},
           ],
          
         },
@@ -105,19 +105,10 @@ import { mapState} from 'vuex';
     methods: {
       // 用户提交表单
       submit(){
-        this.$refs.form.validate((valid)=>{
+        this.$refs.form.validate(async(valid)=>{
           if(valid){
-            // 后续操作
-            if(this.modalType === 0){
-              addUser(this.form).then(()=>{
-                // 重新获取列表接口
-                this.getList();
-              })
-            }else{
-              editUser(this.form).then(()=>{
-                this.getList();
-              });
-            }
+            await this.addNotice()
+            await this.findNotices()
             console.log(this.form);
             // 关闭弹窗
             this.dialogVisible = false;
@@ -164,15 +155,41 @@ import { mapState} from 'vuex';
       this.dialogVisible = true;
       },
       findNotices(){
-      this.$axios.post(this.baseUrl+"/notice/findNoticeByCourse",{
+        return new Promise((resolve, reject) => {
+        this.$axios.post(this.baseUrl+"/notice/findNoticeByCourse",{
                 id:this.courseId
             },{  
                 headers: {  
                     'Content-Type': 'application/json'  
                 }}).then(res=>{this.notices=res.data
+                  resolve(this.notices)
                 }
-            ).catch(error=>{console.error(error);})
+            ).catch(error=>{console.error(error);
+              reject(error)
+            })
+        })
+    },
+    addNotice(){
+      return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/notice/add",{
+                courseId:this.courseId,
+                teacherId:this.uid,
+                title:this.form.name,
+                content:this.form.content
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
     }
+
     },
     
  }
