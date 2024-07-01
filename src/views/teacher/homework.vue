@@ -30,6 +30,31 @@
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog
+          title="完成作业"
+          :visible.sync="visible"
+          :before-close="handleFinshClose"
+          width="50%">
+        <!--表单数据-->
+        <el-form ref="form"  :model="finshForm" label-width="80px">
+          <el-upload  
+                       class="upload-demo"  
+                       drag  
+                       :action="uploadUrl"
+                       :limit="1"
+                       :on-success="fnishSuccess"  
+                       :before-upload="beforeFnish"  
+                        multiple>            
+                        <i class="el-icon-upload"></i>  
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>  
+            </el-upload> 
+        </el-form>
+  
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="handleFinshClose">取 消</el-button>
+          <el-button type="primary" @click="submitHomework">确 定</el-button>
+        </span>
+      </el-dialog>
       <div class="manage-header">
         <el-button type="primary" v-if="isTeacher" @click="handleAdd">+ 新建作业</el-button>
         
@@ -60,7 +85,16 @@
         prop="description" 
         label="作业正文"    
         flex="1"  
-      ></el-table-column> 
+      ></el-table-column>
+      <el-table-column  
+        label="完成作业"    
+        flex="1" 
+        v-if="!isTeacher"
+      >
+      <template slot-scope="scope">
+        <el-button type="primary" @click="handleFinshAdd(scope.row.id)">完成作业</el-button>
+      </template>
+    </el-table-column>
     </el-table>  
 
   </div> 
@@ -69,7 +103,7 @@
     </div>
   </template>
   <script>
- import { mapState} from 'vuex';
+ import { mapState,mapGetters} from 'vuex';
   
   export default {
     name: "Home",
@@ -79,12 +113,12 @@
     data(){
       return{
         dialogVisible: false,
+        visible:false,
         form:{
           name:'',
           description:'',
           chapterOrder:null
-             },
-
+        },
         rules: {
           name: [
             {required: true, message: '请输入作业名', trigger: 'blur'},
@@ -100,13 +134,18 @@
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
 
         homework: [],
-        errorCode:null
+        uploadUrl:this.getBaseurl()+"/file/upload",
+        url:"",
+        homeworkId:null,
+        errorCode:null,
+        homeworkStatus:null
       }
     },
     created(){
       this.findHomework()
     },
     methods: {
+      ...mapGetters(["getBaseurl"]),
       findHomework(){
         return new Promise((resolve, reject) => {
         this.$axios.post(this.baseUrl+"/homework/findHomework",{
@@ -121,6 +160,22 @@
               reject(error)
             })
       })
+      },
+      findFinishState(){
+        return new Promise((resolve, reject) => {
+        this.$axios.post(this.baseUrl+"/homework/findStatus",{
+              homeworkId:this.homeworkId,
+              userId:this.uid
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.homeworkStatus=res.data
+                  resolve(this.homeworkStatus)
+                }
+            ).catch(error=>{console.error(error);
+              reject(error)
+            })
+        })
       },
       addHomework(){
         return new Promise((resolve, reject) => {
@@ -155,9 +210,14 @@
           }
         })
       },
+      submitHomework(){
+        this.finshHomework()
+        this.visible = false;
+        alert("提交成功")
+      },
       handleClose(){
         // 弹框关闭前情况数据
-        this.$refs.form.resetFields();
+        this.$refs.finshForm.resetFields();
         this.dialogVisible = false;
       },
       cancel(){
@@ -191,7 +251,61 @@
       handleAdd(){
       this.modalType = 0;
       this.dialogVisible = true;
-      }
+      },
+      async handleFinshAdd(id){
+        this.homeworkId=id
+        await this.findFinishState()
+        if(this.homeworkStatus===true){
+          alert("该作业已经完成")
+        }else{
+          this.modalType=0;
+          this.visible=true;
+        }
+      },
+      handleFinshClose(){
+        this.$refs.form.resetFields();
+        this.visible = false;
+      },
+      beforeFnish(file){
+        const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png'; 
+        const isPDF=file.type==='application/pdf'
+        const isMP4=file.type==='video/mp4'
+        const isLt100M = file.size / 1024 / 1024 < 100;  
+  
+        if (!(isJPGorPNG||isPDF||isMP4)) {  
+          this.$message.error('上传文件只能是 JPG/PNG/PDF/MP4格式!');  
+          return false;  
+        }  
+        if (!isLt100M) {  
+          this.$message.error('上传文件大小不能超过 100MB!');  
+          return false;  
+        }  
+        return true;  
+      },
+      fnishSuccess(response, file, fileList) {  
+      // 处理上传成功后的逻辑，例如更新 form.image 数组 
+      this.url=response
+      alert("文件上传成功") 
+      },  
+      finshHomework(){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/homework/finish",{
+                homeworkId:this.homeworkId,
+                userId:this.uid,
+                homeworkUrl:this.url
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+      },
+      
     },
  }
   
