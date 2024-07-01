@@ -28,7 +28,10 @@ export default new Vuex.Store({
         },
         updateCourseId(state,data){
           state.courseId=data
-        }
+        },
+        updateIsTeacher(state, data) { // 添加此方法  
+          state.isTeacher = data  
+      } 
      },
      getters:{
       getBaseurl(state){

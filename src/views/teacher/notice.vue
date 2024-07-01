@@ -28,7 +28,7 @@
         </span>
       </el-dialog>
       <div class="manage-header">
-        <el-button type="primary" @click="handleAdd">+ 新增通知</el-button>
+        <el-button type="primary" v-if="isTeacher" @click="handleAdd">+ 新增通知</el-button>
         
 
         <div class="course-grid">  
@@ -72,7 +72,7 @@ import { mapState} from 'vuex';
   export default {
     name: "Home",
     computed:{
- ...mapState(["account","baseUrl","uid","courseId"]),
+ ...mapState(["account","baseUrl","uid","courseId","isTeacher"]),
 },
     data(){
       return{

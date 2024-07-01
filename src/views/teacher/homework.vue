@@ -28,7 +28,7 @@
         </span>
       </el-dialog>
       <div class="manage-header">
-        <el-button type="primary" @click="handleAdd">+ 新建作业</el-button>
+        <el-button type="primary" v-if="isTeacher" @click="handleAdd">+ 新建作业</el-button>
         
 
         <div class="course-grid">  
@@ -66,10 +66,13 @@
     </div>
   </template>
   <script>
-
+ import { mapState} from 'vuex';
   
   export default {
     name: "Home",
+    computed:{
+ ...mapState(["account","baseUrl","uid","courseId","isTeacher"]),
+},
     data(){
       return{
         dialogVisible: false,

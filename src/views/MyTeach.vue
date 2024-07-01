@@ -64,7 +64,9 @@
               <span>{{ course.name }}</span>  
             </div>  
             <p>{{ course.description }}</p>  
-          </div>  
+          </div> 
+          <div class="button">
+            <el-button  type="info" plain round  size="small" @click="findDetail(course.id,true)">查看详情</el-button></div>
         </el-card>  
       </div>  
     </div>  
@@ -75,7 +77,7 @@
   </template>
   <script>
 
-import { mapGetters, mapState} from 'vuex';
+import { mapGetters, mapState,mapMutations} from 'vuex';
   
   export default {
     name: "Home",
@@ -90,7 +92,8 @@ import { mapGetters, mapState} from 'vuex';
           description:'',
          category:'',
          price:'',
-          image:null
+          image:null,
+        
         },
         imageUrl:"",
         uploadUrl:this.getBaseurl()+"/file/upload",
@@ -119,6 +122,7 @@ import { mapGetters, mapState} from 'vuex';
     },
     methods: {
       ...mapGetters(["getBaseurl"]),
+      ...mapMutations(["updateCourseId", "updateIsTeacher"]),
       // 用户提交表单
       submit(){
         this.$refs.form.validate(async (valid)=>{
@@ -159,10 +163,13 @@ import { mapGetters, mapState} from 'vuex';
         this.$message.error('上传头像图片大小不能超过 100MB!');  
         return false;  
       }  
-      
-
       return true;  
       },
+      findDetail(id, isteacher) {  
+      this.updateCourseId(id);  
+      this.updateIsTeacher(isteacher); 
+      this.$router.push({ path: '/course/chapter' });  
+    } ,
       // 获取列表
       handleAdd(){
       this.modalType = 0;

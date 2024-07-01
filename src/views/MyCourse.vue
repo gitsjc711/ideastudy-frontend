@@ -15,7 +15,7 @@
               </div>  
               <p>{{ course.description }}</p>  
               <div class="button">
-            <el-button  type="info" plain round  size="small" @click="findDetail(course.id)">查看详情</el-button></div>
+            <el-button  type="info" plain round  size="small" @click="findDetail(course.id,false)">查看详情</el-button></div>
             </div>  
           </el-card>  
         </div>  
@@ -32,14 +32,14 @@
     }, 
     data() {  
       return {  
-        courses: []  
+        courses: [] ,
       };  
     },
     created(){
       this.getMyLesson()
     },
     methods:{
-      ...mapMutations(["updateCourseId"]),
+      ...mapMutations(["updateCourseId", "updateIsTeacher"]),
       getMyLesson(){
         this.$axios.post(this.baseUrl+"/course/findMyCourse",{
           id:this.uid
@@ -50,12 +50,11 @@
         }
         ).catch(error=>{console.error(error);})
         },
-        findDetail(id){
-          this.updateCourseId(id),
-          this.$router.push(
-            { path: '/course/chapter'
-          }); 
-      }
+        findDetail(id, isteacher) {  
+      this.updateCourseId(id);  
+      this.updateIsTeacher(isteacher); 
+      this.$router.push({ path: '/course/chapter' });  
+    } 
     } 
   };
   

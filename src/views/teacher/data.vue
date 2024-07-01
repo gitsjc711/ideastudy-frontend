@@ -25,7 +25,7 @@
         </span>
       </el-dialog>
       <div class="manage-header">
-        <el-button type="primary" @click="handleAdd">+ 添加资料</el-button>
+        <el-button type="primary" v-if="isTeacher" @click="handleAdd">+ 添加资料</el-button>
         
 
         <div class="course-grid">  
@@ -66,7 +66,7 @@
   export default {
     name: "Home",
     computed:{
- ...mapState(["account","baseUrl","uid","courseId"]),
+ ...mapState(["account","baseUrl","uid","courseId","isTeacher"]),
 },
     data(){
       return{
