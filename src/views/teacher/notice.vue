@@ -134,8 +134,8 @@ import { mapState} from 'vuex';
       handleSuccess(response, file, fileList) {  
       // 处理上传成功后的逻辑，例如更新 form.image 数组  
       this.form.image.push(file);  
-    },  
-    beforeUpload(file) {  
+      },  
+      beforeUpload(file) {  
       const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';  
       const isLt100M = file.size / 1024 / 1024 < 100;  
   
@@ -168,9 +168,9 @@ import { mapState} from 'vuex';
               reject(error)
             })
         })
-    },
-    addNotice(){
-      return new Promise((resolve, reject) => {
+      },
+      addNotice(){
+        return new Promise((resolve, reject) => {
             this.$axios.post(this.baseUrl+"/notice/add",{
                 courseId:this.courseId,
                 teacherId:this.uid,
@@ -188,7 +188,7 @@ import { mapState} from 'vuex';
                 reject(error)
             })
             })
-    }
+      }
 
     },
     
