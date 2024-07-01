@@ -1,16 +1,23 @@
 <template>
     <div class="manage">
       <el-dialog
-          title="添加课程"
+          title="添加资料"
           :visible.sync="dialogVisible"
           :before-close="handleClose"
           width="50%">
         <!--表单数据-->
         <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
+          <el-form-item label="资源名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入资源名称" style="width: 50%;"></el-input>
+          </el-form-item>
+          <el-form-item label="章节序号" prop="order">
+            <el-input v-model="form.order" placeholder="请输入章节序号" style="width: 50%;"></el-input>
+          </el-form-item>
           <el-upload  
                        class="upload-demo"  
                        drag  
-                       action="YOUR_ACTUAL_UPLOAD_URL" 
+                       :action="uploadUrl"
+                       :limit="1"
                        :on-success="handleSuccess"  
                        :before-upload="beforeUpload"  
                         multiple>            
@@ -61,7 +68,7 @@
     </div>
   </template>
   <script>
- import { mapState} from 'vuex';
+ import { mapState,mapGetters} from 'vuex';
   
   export default {
     name: "Home",
@@ -73,50 +80,39 @@
         dialogVisible: false,
         form:{
           name:'',
-          describe:'',
+          order:null,
           
-         // image:[]
              },
 
         rules: {
           name: [
-            {required: true, message: '请输入课程名', trigger: 'blur'},
+            {required: true, message: '请输入资源名称', trigger: 'blur'},
           ],
-          describe: [
-            {required: true, message: '请输入课程描述', trigger: 'blur'},
+          order: [
+            {required: true, message: '请输入章节序号', trigger: 'blur'},
           ],
-          category: [
-            {required: true, message: '请输入课程目录', trigger: 'blur'},
-          ],
-          price: [
-            {required: true, message: '请输入课程价格', trigger: 'blur'},
-          ],
+          
         },
         tableData: [],
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
 
-        data: []
+        data: [],
+        uploadUrl:this.getBaseurl()+"/file/upload",
+        url:"",
+        errorCode:null
       }
     },
     created(){
       this.findResource()
     },
     methods: {
+      ...mapGetters(["getBaseurl"]),
       // 用户提交表单
       submit(){
-        this.$refs.form.validate((valid)=>{
+        this.$refs.form.validate(async(valid)=>{
           if(valid){
-            // 后续操作
-            if(this.modalType === 0){
-              addUser(this.form).then(()=>{
-                // 重新获取列表接口
-                this.getList();
-              })
-            }else{
-              editUser(this.form).then(()=>{
-                this.getList();
-              });
-            }
+            await this.addResource()
+            await this.findResource()
             console.log(this.form);
             // 关闭弹窗
             this.dialogVisible = false;
@@ -140,8 +136,9 @@
         this.form = JSON.parse(JSON.stringify(row));
       },
       handleSuccess(response, file, fileList) {  
-      // 处理上传成功后的逻辑，例如更新 form.image 数组  
-      this.form.image.push(file);  
+      // 处理上传成功后的逻辑，例如更新 form.image 数组 
+      this.url=response
+      alert("文件上传成功") 
     },  
     beforeUpload(file) {  
       const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';  
@@ -163,14 +160,39 @@
       this.dialogVisible = true;
       },
       findResource(){
+        return new Promise((resolve, reject) => {
         this.$axios.post(this.baseUrl+"/resource/findResourceByCourse",{
                 id:this.courseId
             },{  
                 headers: {  
                     'Content-Type': 'application/json'  
                 }}).then(res=>{this.data=res.data
+                  resolve(this.data)
                 }
-            ).catch(error=>{console.error(error);})
+            ).catch(error=>{console.error(error);
+              reject(error)
+            })
+      }
+      )},
+      addResource(){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/resource/add",{
+                courseId:this.courseId,
+                chapterOrder:this.form.order,
+                name:this.form.name,
+                url:this.url
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
       }
     },
  }
