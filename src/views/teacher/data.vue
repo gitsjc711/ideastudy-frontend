@@ -62,6 +62,7 @@
       <template slot-scope="scope">  
         <button @click="learn(scope.row.url,scope.row.id)" v-if="!isTeacher">学习</button>
         <button @click="search(scope.row.url)" v-if="isTeacher">查看</button>
+        <button @click="handleDelete(scope.row.id)" v-if="isTeacher">删除</button>
      </template>
     </el-table-column> 
     <el-table-column  
@@ -231,7 +232,30 @@ import { mapState,mapGetters} from 'vuex';
       },
       search(url){
         window.open(url,"_blank")
+      },
+      deleteResourse(id){
+        return new Promise((resolve, reject) => {
+        this.$axios.post(this.baseUrl+"/resource/delete",{
+                id:id
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                  resolve(this.errorCode)
+                  if(this.errorCode==="OK"){
+                    alert("删除成功")
+                  }
+                }
+            ).catch(error=>{console.error(error);
+              reject(error)
+            })
+        })
+      },
+      async handleDelete(id){
+        await this.deleteResourse(id)
+        await this.findResource()
       }
+
     },
  }
   
