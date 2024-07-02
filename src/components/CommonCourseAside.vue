@@ -51,7 +51,12 @@
             label: '作业',
             icon: 'user',
           },
-       
+          {
+            path:'/course/comment',
+            name:'comment',
+            label:'评论',
+            icon:'user'
+          }
   
         ]
       };

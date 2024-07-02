@@ -28,20 +28,18 @@ export default {
   data() {
     return {
       user:{
-        id:null,
-        status:null,
-        account:this.account,
-        nickname:"",
-        email:"",
-        role:""
-      },
-      noticeList:[]
+          id:null,
+          status:null,
+          account:this.account,
+          nickname:"",
+          email:"",
+          role:""
+        },
     }
 
   },
   created(){
     this.getUserDetail()
-    this.getNoticeList()
   },
   methods:{
     ...mapMutations(["updateRole","updateUid"]),
@@ -58,16 +56,6 @@ export default {
       }
       ).catch(error=>{console.error(error);})
     },
-    getNoticeList(){
-      this.$axios.post(this.baseUrl+"/notice/findNotice",{
-        id:this.uid
-      },{  
-      headers: {  
-        'Content-Type': 'application/json'  
-      }}).then(res=>{
-        this.noticeList=res.data
-      }).catch(error=>{console.error(error);})
-    }
   }
 }
 </script>

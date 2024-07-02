@@ -58,9 +58,11 @@
       ></el-table-column>  
       <el-table-column    
         flex="1"  
-      ><template slot-scope="scope">  
-        <button @click="learn(scope.row.url,scope.row.id)">学习</button>  
-      </template>
+      >
+      <template slot-scope="scope">  
+        <button @click="learn(scope.row.url,scope.row.id)" v-if="!isTeacher">学习</button>
+        <button @click="search(scope.row.url)" v-if="isTeacher">查看</button>
+     </template>
     </el-table-column> 
     <el-table-column  
         prop="learned"  
@@ -75,7 +77,7 @@
     </div>
   </template>
   <script>
- import { mapState,mapGetters} from 'vuex';
+import { mapState,mapGetters} from 'vuex';
   
   export default {
     name: "Home",
@@ -226,6 +228,9 @@
               reject(error)
             })
         })
+      },
+      search(url){
+        window.open(url,"_blank")
       }
     },
  }

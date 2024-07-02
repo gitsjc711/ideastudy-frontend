@@ -12,6 +12,7 @@ import Chapter from "@/views/teacher/chapter.vue"
 import HomeWork from "@/views/teacher/homework.vue"
 import Notice from "@/views/teacher/notice.vue"
 import Data from "@/views/teacher/data.vue"
+import Comment from "@/views/teacher/comment.vue"
 import Router from 'vue-router'
 
 Vue.use(Router)
@@ -51,6 +52,7 @@ export default new Router({
                 { path: 'homework', component: HomeWork },
                 { path: 'notice', component:Notice },
                 { path: 'data', component: Data },
+                {path:'comment',component:Comment}
                
             ],
             redirect:'/course/chapter',
