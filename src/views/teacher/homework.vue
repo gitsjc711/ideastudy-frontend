@@ -298,7 +298,7 @@ import { mapState,mapGetters} from 'vuex';
       },
       async handleFinshAdd(id){
         this.homeworkId=id
-        this.findFinishState()
+        await this.findFinishState()
         if(this.homeworkStatus===true){
           alert("该作业已经完成")
         }else{
