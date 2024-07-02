@@ -59,9 +59,14 @@
       <el-table-column    
         flex="1"  
       ><template slot-scope="scope">  
-        <button @click="learn(scope.row.url)">学习</button>  
+        <button @click="learn(scope.row.url,scope.row.id)">学习</button>  
       </template>
-    </el-table-column>  
+    </el-table-column> 
+    <el-table-column  
+        prop="learned"  
+        flex="1"
+        v-if="!isTeacher"
+      ></el-table-column>  
     </el-table>  
 
   </div> 
@@ -101,7 +106,8 @@
         data: [],
         uploadUrl:this.getBaseurl()+"/file/upload",
         url:"",
-        errorCode:null
+        errorCode:null,
+        resourceId:null
       }
     },
     created(){
@@ -166,7 +172,8 @@
       findResource(){
         return new Promise((resolve, reject) => {
         this.$axios.post(this.baseUrl+"/resource/findResourceByCourse",{
-                id:this.courseId
+                courseId:this.courseId,
+                userId:this.uid
             },{  
                 headers: {  
                     'Content-Type': 'application/json'  
@@ -176,8 +183,8 @@
             ).catch(error=>{console.error(error);
               reject(error)
             })
-      }
-      )},
+        })
+      },
       addResource(){
         return new Promise((resolve, reject) => {
             this.$axios.post(this.baseUrl+"/resource/add",{
@@ -198,8 +205,27 @@
             })
             })
       },
-      learn(url){
+      async learn(url,id){
+        this.resourceId=id
+        await this.study()
+        await this.findResource()
         window.open(url,"_blank")
+      },
+      study(){
+        return new Promise((resolve, reject) => {
+        this.$axios.post(this.baseUrl+"/resource/learn",{
+                id:this.resourceId,
+                userId:this.uid
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                  resolve(this.errorCode)
+                }
+            ).catch(error=>{console.error(error);
+              reject(error)
+            })
+        })
       }
     },
  }
