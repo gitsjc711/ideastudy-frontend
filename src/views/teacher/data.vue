@@ -60,9 +60,9 @@
         flex="1"  
       >
       <template slot-scope="scope">  
-        <button @click="learn(scope.row.url,scope.row.id)" v-if="!isTeacher">学习</button>
-        <button @click="search(scope.row.url)" v-if="isTeacher">查看</button>
-        <button @click="handleDelete(scope.row.id)" v-if="isTeacher">删除</button>
+        <el-button type="text" @click="learn(scope.row.url,scope.row.id)" v-if="!isTeacher">学习</el-button>
+        <el-button type="text" @click="search(scope.row.url)" v-if="isTeacher">查看</el-button>
+        <el-button type="text" @click="handleDeleteResource(scope.row.id)" v-if="isTeacher">删除</el-button>
      </template>
     </el-table-column> 
     <el-table-column  
@@ -251,10 +251,11 @@ import { mapState,mapGetters} from 'vuex';
             })
         })
       },
-      async handleDelete(id){
+      async handleDeleteResource(id){
         await this.deleteResourse(id)
         await this.findResource()
       }
+      
 
     },
  }

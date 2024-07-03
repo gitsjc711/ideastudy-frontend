@@ -56,9 +56,14 @@
       <el-table-column  
         prop="content"  
         label="通知描述"  
-        width="800"  
+        width="700"  
       ></el-table-column>  
-      
+      <el-table-column   
+        label="删除"  
+        width="100"  
+      ><template slot-scope="scope">
+        <el-button type="text" @click="handleDeleteNotice(scope.row.id)">删除</el-button>
+      </template></el-table-column>  
     </el-table>  
 
   </div> 
@@ -188,6 +193,27 @@ import { mapState} from 'vuex';
                 reject(error)
             })
             })
+      },
+      deleteNotice(id){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/notice/delete",{
+                id:id
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+      },
+      async handleDeleteNotice(id){
+        
+        await this.deleteNotice(id)
+        await this.findNotices()
       }
 
     },
