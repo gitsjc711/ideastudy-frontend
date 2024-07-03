@@ -110,7 +110,12 @@
         prop="name" 
         label="作业标题"    
         width="180" 
-      ></el-table-column>   
+      ></el-table-column>  
+      <el-table-column  
+        prop="chapterOrder" 
+        label="作业章节"    
+        width="180" 
+      ></el-table-column>  
       <el-table-column  
         prop="description" 
         label="作业正文"    
@@ -126,12 +131,13 @@
       </template>
     </el-table-column>
     <el-table-column  
-        label="查看学生作业"    
+        label="教师操作"    
         flex="1" 
         v-if="isTeacher"
       >
       <template slot-scope="scope">
-        <el-button type="primary" @click="studentHomework(scope.row.id)">查看学生作业</el-button>
+        <el-button type="primary" @click="studentHomework(scope.row.id)">查看</el-button>
+        <el-button type="primary" @click="deleteHomework(scope.row.id)">删除</el-button>
       </template>
     </el-table-column>
     </el-table>  
@@ -378,6 +384,26 @@ import { mapState,mapGetters} from 'vuex';
       },
       checkHomework(homeworkUrl){
         window.open(homeworkUrl,"_blank")
+      },
+      deleteHomework(id){
+       this.teacherDeleteHomework(id)
+       this.findHomework()
+      },
+      teacherDeleteHomework(id){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/homework/teacherDelete",{
+                id:id
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
       }
       
     },

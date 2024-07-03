@@ -60,9 +60,10 @@
       ></el-table-column>  
       <el-table-column   
         label="删除"  
-        width="100"  
+        width="100"
+        v-if="isTeacher"
       ><template slot-scope="scope">
-        <el-button type="text" @click="handleDeleteNotice(scope.row.id)">删除</el-button>
+        <el-button type="text"  @click="handleDeleteNotice(scope.row.id)">删除</el-button>
       </template></el-table-column>  
     </el-table>  
 

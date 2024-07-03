@@ -75,14 +75,14 @@
         label="回复"
         width="100">
         <template slot-scope="scope">  
-        <el-button type="primary" @click="reply(scope.row.id)">回复</el-button>
+        <el-button type="text" @click="reply(scope.row.id)">回复</el-button>
         </template>
       </el-table-column>
       <el-table-column
         label="查看回复"
         width="100">
         <template slot-scope="scope">
-            <el-button type="primary" @click="lookReply(scope.row.id)">查看</el-button>
+            <el-button type="text" @click="lookReply(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
