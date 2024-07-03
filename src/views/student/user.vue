@@ -13,8 +13,9 @@
             <p class="access">身份<span>{{user.role}}</span></p>
             <p>邮箱<span>{{ user.email }}</span></p>
           </div>
-        
+          <el-button  type="primary" class="changeButton" @click="changeDetail">修改</el-button>
     </el-row>
+   
   </div>
   </template>
 
@@ -56,6 +57,9 @@ export default {
       }
       ).catch(error=>{console.error(error);})
     },
+    changeDetail(){
+
+    }
   }
 }
 </script>

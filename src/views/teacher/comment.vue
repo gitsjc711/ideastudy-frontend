@@ -79,10 +79,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="查看回复"
-        width="100">
+        label="评论操作"
+        width="200">
         <template slot-scope="scope">
-            <el-button type="text" @click="lookReply(scope.row.id)">查看</el-button>
+            <el-button type="text" @click="lookReply(scope.row.id)">查看回复</el-button>
+            <el-button type="text" @click="deleteComment(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -207,6 +208,30 @@ import { mapState} from 'vuex';
       lookOk(){
         this.replyId=0
         this.isReply=false
+      },
+      async deleteComment(id){
+        await this.selfDeleteComment(id)
+        await this.findComment()
+      },
+      selfDeleteComment(id){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/comment/delete",{
+                id:id,
+                userId:this.uid
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                  if(this.errorCode!="OK"){
+                      alert(this.errorCode)
+                    }
+                    resolve(this.errorCode)
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+        })
       }
     }
   };
