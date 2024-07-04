@@ -10,8 +10,8 @@
           width="50%">
         <!--表单数据-->
         <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="目录名" prop="name">
-            <el-input v-model="form.name" placeholder="请输入目录名" style="width: 50%;"></el-input>
+          <el-form-item label="目录名" prop="categoryName">
+            <el-input v-model="form.categoryName" placeholder="请输入目录名" style="width: 50%;"></el-input>
           </el-form-item>
         <!--自行添加-->
         </el-form>
@@ -23,44 +23,23 @@
     <div>  
       <h1 style="text-align: center;">课程目录</h1>  
       <el-table  
-        :data="courses"  
+        :data="categories"  
         style="width: 100%"  
         stripe  
       >  
-      <el-table-column  
-        label="课程图片"  
-        width="180"  
-  >  
-     <template slot-scope="scope">  
-      <!-- 使用 img 标签来显示图片 -->  
-      <img :src="scope.row.courseLogoRequestUrl" style="width: 100%; height: auto; display: block;" alt="课程图片">  
-     </template>  
-  </el-table-column> 
+         
         <el-table-column  
           prop="categoryName"  
-          label="课程分类"  
+          label="目录名称"  
           width="180"  
         ></el-table-column>  
         <el-table-column  
-          prop="name"  
-          label="课程名称"  
+          
+          label="目录操作"  
           width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="description"  
-          label="课程描述"  
-          width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="teacherName"  
-          label="任课教师"  
-          width="180"  
-        ></el-table-column>  
-        <el-table-column  
-          prop="price"  
-          label="价格"  
-          width="180"  
-        ></el-table-column>     
+        ><template slot-scope="scope">
+          <el-button type="text" @click="finishDelete(scope.row.id)">删除</el-button>
+        </template></el-table-column>  
       </el-table>  
     </div>  
   </div>
@@ -71,34 +50,35 @@
   
   export default {  
     computed:{
-      ...mapState(["baseUrl","uid"])
+      ...mapState(["baseUrl","uid","role"])
     },
   data() {  
     return {  
-        courses: [],
+        categories: [],
         dialogVisible: false,
         form:{
-        name:'',
+          categoryName:'',
         
       },
       rules: {
-          name: [
-            {required: true, message: '请输入章节标题', trigger: 'blur'},
+          categoryName: [
+            {required: true, message: '请输入目录名称', trigger: 'blur'},
           ],
           
         },
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
+        errorCode:null
     };
   },
   created(){
-    
+    this.findCategory()
   },
   methods:{
     submit(){
         this.$refs.form.validate(async (valid)=>{
           if(valid){
-            await this.addChapter()
-            await this.findChapter()
+            await this.addCategory()
+            await this.findCategory()
             console.log(this.form);
             // 关闭弹窗
             this.dialogVisible = false;
@@ -132,6 +112,62 @@
         this.modalType = 0;
         this.dialogVisible = true;
       }, 
+      addCategory(){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/category/add",{
+                categoryName:this.form.categoryName,
+                role:this.role
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                    if(this.errorCode!="OK"){
+                      alert(this.errorCode)
+                    }
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+      },
+      findCategory(){
+        return new Promise((resolve, reject) => {
+            this.$axios.get(this.baseUrl+"/category/all").then(res=>{this.categories=res.data
+                    resolve(this.categories)
+                    
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+      },
+      async finishDelete(id){
+        await this.deleteCategory(id)
+        await this.findCategory()
+      },
+      deleteCategory(id){
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/category/delete",{
+                id:id,
+                role:this.role
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                    if(this.errorCode!="OK"){
+                      alert(this.errorCode)
+                    }
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+      }
     
    
   
