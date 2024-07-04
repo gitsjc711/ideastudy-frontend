@@ -127,6 +127,10 @@
   </script>
   
   <style lang="less" scoped>
+   .el-card {  
+    border: none;
+  background-color: rgba(255, 255, 255, 0.5); /* 白色背景，50%透明度 */  
+  }
   .user{
     padding-bottom: 20px;
     margin-bottom: 20px;

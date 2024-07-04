@@ -14,6 +14,7 @@ import Notice from "@/views/teacher/notice.vue"
 import Data from "@/views/teacher/data.vue"
 import Comment from "@/views/teacher/comment.vue"
 import Router from 'vue-router'
+import Admin from '@/views/admin/admin.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -39,6 +40,7 @@ export default new Router({
                 { path: 'MyCourse', component: MyCourse },
                 { path: 'goodlist', component: Goodlist },
                 { path: 'MyTeach', component: MyTeach },
+                {path: 'Admin', component: Admin},
             ],
             redirect:'/mainPage/',
         },

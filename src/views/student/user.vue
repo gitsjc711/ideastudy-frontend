@@ -1,7 +1,29 @@
 <template>
   <div class="container">
+    <el-dialog
+          title="修改个人信息"
+          :visible.sync="dialogVisible"
+          :before-close="handleClose"
+          width="50%">
+        <!--表单数据-->
+        <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
+          <el-form-item label="昵称" prop="nickname">
+            <el-input v-model="form.nickname" placeholder="请输入昵称" style="width: 50%;"></el-input>
+          </el-form-item>
+
+          
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="form.email" placeholder="请输入邮箱" style="width: 50%;"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </span>
+  </el-dialog>
+
+
     <el-row>
-       
       <img :src="this.user.userAvatarRequestUrl"> 
           <div class="user">
             <div class="userInfo">
@@ -36,9 +58,23 @@ export default {
           email:"",
           role:""
         },
+        form:{
+        nickname:'',
+        email:'',
+      },
+        dialogVisible: false,
+        rules: {
+          nickname: [
+            {required: true, message: '请输入昵称', trigger: 'blur'},
+          ],
+          email: [
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
+          ],
+        },
     }
 
   },
+
   created(){
     this.getUserDetail()
   },
@@ -58,8 +94,46 @@ export default {
       ).catch(error=>{console.error(error);})
     },
     changeDetail(){
-
-    }
+     
+    },
+    submit(){
+        this.$refs.form.validate(async (valid)=>{
+          if(valid){
+            await this.addChapter()
+            await this.findChapter()
+            console.log(this.form);
+            // 关闭弹窗
+            this.dialogVisible = false;
+            // 表单内容清空
+            this.$refs.form.resetFields();
+          }
+        })
+      },
+      handleClose(){
+        // 弹框关闭前情况数据
+        this.$refs.form.resetFields();
+        this.dialogVisible = false;
+      },
+      handleDeleteClose(){
+        this.deleteVisible= false
+      },
+      cancel(){
+        this.handleClose();
+      },
+      handleEdit(row){
+        this.modalType = 1;
+        this.dialogVisible = true;
+        // 注意，需要对数据进行深拷贝
+        this.form = JSON.parse(JSON.stringify(row));
+      },
+      handleSuccess(response, file, fileList) {  
+      // 处理上传成功后的逻辑，例如更新 form.image 数组  
+      this.form.image.push(file);  
+      },  
+      changeDetail(){
+        this.modalType = 0;
+        this.dialogVisible = true;
+      }, 
   }
 }
 </script>
@@ -81,7 +155,8 @@ export default {
   } 
 
 img{
-    margin-right: 40px;
+    margin-left: 30px;
+    margin-top: 10px;
     width: 250px;
     height: 250px;
     border-radius: 50%;
@@ -102,6 +177,11 @@ img{
       color: #999999;
     }
   }
+}
+
+.changeButton{
+  margin-top: 60px;
+  margin-left: 105px
 }
 
 .login-info{

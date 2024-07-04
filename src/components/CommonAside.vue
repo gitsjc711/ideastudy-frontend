@@ -6,7 +6,7 @@
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
-        background-color="#545c64"
+        background-color="#357081"
         text-color="#fff"
         active-text-color="#ffd04b"
        >
@@ -46,13 +46,19 @@ export default {
           path: '/mainPage/goodlist',
           name: 'goodlist',
           label: '课程搜索',
-          icon: 'video-play',
+          icon: 'search',
         },
         {
           path: '/mainPage/user',
           name: 'user',
           label: '用户资料',
           icon: 'user',
+        },
+        {
+          path: '/mainPage/admin',
+          name: 'admin',
+          label: '课程目录管理',
+          icon: 's-management',
         },
         
         {
@@ -123,6 +129,7 @@ min-height: 400px;
 .el-menu{
 height: 100vh;
 border-right: none;
+background-color: #357081;
 h3{
       color: #fff;
     text-align: center;
