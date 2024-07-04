@@ -42,7 +42,7 @@
                        drag  
                        :action="uploadUrl"
                        :limit="1"
-                       :on-success="fnishSuccess"  
+                       :on-success="finishSuccess"  
                        :before-upload="beforeFnish"  
                         multiple>            
                         <i class="el-icon-upload"></i>  
@@ -53,6 +53,26 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleFinshClose">取 消</el-button>
           <el-button type="primary" @click="submitHomework">确 定</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog
+          title="更新作业"
+          :visible.sync="updateVisible"
+          :before-close="handleUpdateClose"
+          width="50%">
+          <el-upload  
+                       class="upload-demo"  
+                       drag  
+                       :action="uploadUrl"
+                       :limit="1"
+                       :on-success="finishSuccess"  
+                       :before-upload="beforeFnish"  
+                        multiple>            
+                        <i class="el-icon-upload"></i>  
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>  
+            </el-upload> 
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitUpdateHomework">确 定</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -128,6 +148,7 @@
       >
       <template slot-scope="scope">
         <el-button type="primary" @click="handleFinshAdd(scope.row.id)">完成作业</el-button>
+        <el-button type="primary" @click="handleFinshUpdate(scope.row.id)">更新作业</el-button>
       </template>
     </el-table-column>
     <el-table-column  
@@ -159,6 +180,7 @@ import { mapState,mapGetters} from 'vuex';
       return{
         dialogVisible: false,
         visible:false,
+        updateVisible:false,
         studentHomeworkVisible:false,
         form:{
           name:'',
@@ -265,6 +287,11 @@ import { mapState,mapGetters} from 'vuex';
         this.visible = false;
         alert("提交成功")
       },
+      submitUpdateHomework(){
+        this.updateHomework()
+        this.updateVisible=false;
+        alert("提交成功")
+      },
       handleClose(){
         // 弹框关闭前情况数据
         this.$refs.form.resetFields();
@@ -316,6 +343,9 @@ import { mapState,mapGetters} from 'vuex';
         this.$refs.form.resetFields();
         this.visible = false;
       },
+      handleUpdateClose(){
+        this.updateVisible = false;
+      },
       beforeFnish(file){
         const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png'; 
         const isPDF=file.type==='application/pdf'
@@ -332,7 +362,7 @@ import { mapState,mapGetters} from 'vuex';
         }  
         return true;  
       },
-      fnishSuccess(response, file, fileList) {  
+      finishSuccess(response, file, fileList) {  
       // 处理上传成功后的逻辑，例如更新 form.image 数组 
       this.url=response
       alert("文件上传成功") 
@@ -404,6 +434,33 @@ import { mapState,mapGetters} from 'vuex';
                 reject(error)
             })
             })
+      },
+      updateHomework(){
+        if(this.url==""){
+          alert("请等待文件上传")
+        }else{
+        return new Promise((resolve, reject) => {
+            this.$axios.post(this.baseUrl+"/homework/updateFinishHomework",{
+                homeworkId:this.homeworkId,
+                userId:this.uid,
+                homeworkUrl:this.url
+            },{  
+                headers: {  
+                    'Content-Type': 'application/json'  
+                }}).then(res=>{this.errorCode=res.data
+                    resolve(this.errorCode)
+                }
+            ).catch(
+                error=>{console.error(error);
+                reject(error)
+            })
+            })
+          }
+      },
+      handleFinshUpdate(id){
+        this.homeworkId=id
+        this.modalType=0;
+        this.updateVisible=true;
       }
       
     },
