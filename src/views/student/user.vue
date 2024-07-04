@@ -241,14 +241,15 @@ export default {
   } 
 
 img{
-    margin-left: 30px;
+    margin-left: 25px;
     margin-top: 10px;
+    margin-bottom: 10px;
     width: 250px;
     height: 250px;
     border-radius: 50%;
   }
 .user{
-  padding-bottom: 20px;
+  padding-bottom: 5px;
   margin-bottom: 20px;
   border-bottom: 1px solid #ccc;
   display: flex;
@@ -256,8 +257,9 @@ img{
   justify-content: center;
   .userInfo{
     .name{
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 50px;
+      margin-bottom: 1px;
+      font-family: fly;
     }
     .access{
       color: #999999;

@@ -5,6 +5,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import store from './store'
 import axios from 'axios';
+import '../src/assets/fonts/font.css';
 
 Vue.config.productionTip = false
 Vue.use(router)

@@ -6,7 +6,7 @@
         class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
-        background-color="#357081"
+        background-color="#313961"
         text-color="#fff"
         active-text-color="#ffd04b"
        >
@@ -124,18 +124,19 @@ export default {
 <style lang="less" scoped>
 .el-menu-vertical-demo:not(.el-menu--collapse) {
 width: 200px;
-min-height: 400px;
+min-height: 100vh;
 }
 .el-menu{
-height: 100vh;
+height: 100%;
 border-right: none;
-background-color: #357081;
+background-color: #313961;
 h3{
       color: #fff;
     text-align: center;
     line-height: 48px;
-    font-size: 16px;
+    font-size: 20px;
       font-weight: 400;
+      font-family: coffee;
 }
 }
 </style>

@@ -1,4 +1,5 @@
 <template>    
+<div id="building">
     <div class="register-container">    
       <el-form :model="registerForm" :rules="rules" ref="registerForm" label-width="120px">    
         <h3 class="register-title">用户注册</h3>  
@@ -40,7 +41,8 @@
           <el-button  type="primary" @click="submitForm('registerForm')">注册</el-button>    
         </el-form-item>    
       </el-form>    
-    </div>    
+    </div>  
+  </div>  
   </template>
 
   <script>  
@@ -210,7 +212,7 @@
     .register-container {  
       width: 350px;  
       border: 1px solid #eaeaea;  
-      margin: 180px auto;  
+      margin: auto auto;  
       padding: 35px 35px 35px 15px;  
       background-color: #ffffff;  
       border-radius: 15px;  
@@ -272,5 +274,23 @@
         margin-top: 20px;   
       }  
     
-     
+    #building {  
+  position: relative; /* 改为相对定位 */  
+  width: 100%;  
+  /* 其他样式 */  
+  overflow-y: auto; /* 允许内容垂直滚动 */  
+}  
+  
+    #building::before {  
+  content: "";  
+  position: absolute;  
+  top: 0;  
+  left: 0;  
+  right: 0;  
+  bottom: 0;  
+  background: url("../assets/background.jpg") no-repeat center center;  
+  background-size: cover; /* 或 100% 100% */  
+  z-index: -1; /* 确保背景在内容之下 */  
+}
+
       </style>

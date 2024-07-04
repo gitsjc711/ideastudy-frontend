@@ -1,4 +1,5 @@
 <template>
+  <div id="building">
   <el-form label-width="70" class="login-container" ref="form" :model="form" :rules="rules">
     <h3 class="login_title">系统登录</h3>
     <el-form-item label="账号" prop="username">
@@ -12,6 +13,7 @@
       <el-button type="text" class="register-button" style="margin-left: 30px;" @click="register">注册</el-button>
     </el-form-item>
   </el-form>
+</div>
 </template>
 
 <script>
@@ -114,5 +116,11 @@ box-sizing: border-box;
   background-color: transparent;  
 } 
 }
-
+#building{
+  background:url("../assets/background.jpg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+}
 </style>

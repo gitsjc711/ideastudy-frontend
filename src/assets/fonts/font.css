@@ -1,0 +1,24 @@
+@font-face {
+    /*给字体命名*/
+    font-family: 'coffee';
+    /*引入字体文件*/
+    src: url('./字魂海派咖啡体.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    /*给字体命名*/
+    font-family: 'fly';
+    /*引入字体文件*/
+    src: url('./飞波正点体.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    /*给字体命名*/
+    font-family: 'tang';
+    /*引入字体文件*/
+    src: url('./尔雅盛唐真书.ttf');
+    font-weight: normal;
+    font-style: normal;
+}

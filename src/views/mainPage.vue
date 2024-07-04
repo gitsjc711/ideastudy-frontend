@@ -145,11 +145,12 @@
     }
     .userInfo{
       .name{
-        font-size: 32px;
+        font-size: 40px;
         margin-bottom: 10px;
+        font-family: tang;
       }
       .access{
-        color: #999999;
+        color: #181818;
       }
     }
   }
@@ -158,9 +159,9 @@
     p{
       line-height: 28px;
       font-size: 14px;
-      color: #999999;
+      color: #111111;
       span{
-        color: #666666;
+        color: #111111;
         margin-left: 60px;
       }
     }
