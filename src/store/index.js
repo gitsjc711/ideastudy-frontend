@@ -12,7 +12,7 @@ export default new Vuex.Store({
         account:"",
         role:"",
         uid:null,
-        baseUrl:"http://8pmtjb.natappfree.cc",
+        baseUrl:"http://92fmsa.natappfree.cc",
         courseId:null,
         isTeacher:null
     },
