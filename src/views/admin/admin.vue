@@ -21,22 +21,22 @@
         </span>
   </el-dialog> 
     <div>  
-      <h1 style="text-align: center;">课程目录</h1>  
+      <h1 style="text-align: center; color:white;">课程目录</h1>  
       <el-table  
         :data="categories"  
-        style="width: 100%"  
+        style="width: 60%"  
         stripe  
       >  
          
         <el-table-column  
           prop="categoryName"  
           label="目录名称"  
-          width="180"  
+          width= 400px  
         ></el-table-column>  
         <el-table-column  
           
           label="目录操作"  
-          width="180"  
+          width= 360px  
         ><template slot-scope="scope">
           <el-button type="text" @click="finishDelete(scope.row.id)">删除</el-button>
         </template></el-table-column>  

@@ -1,6 +1,6 @@
 <template>  
   <div class="course-grid">  
-    <h1 style="text-align: center;" >已购买课程</h1>  
+    <h1 style="text-align: center;  color: white;" >已购买课程</h1>  
     <div class="grid-container">  
       <div  
         v-for="(course, index) in courses"  
@@ -171,4 +171,12 @@ export default {
   -webkit-line-clamp: 1; /* 限制行数 */  
   -webkit-box-orient: vertical;  
 }
+h1 {
+    text-align: center;
+    /* Center the heading */
+    font-size: 24px;
+    /* Increase the font size for better visibility */
+    margin-bottom: 20px;
+    /* Add some space below the heading */
+  }
   </style>

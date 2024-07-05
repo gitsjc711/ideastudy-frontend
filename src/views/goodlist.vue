@@ -20,7 +20,7 @@
     </el-form>  
   </div>  
   <div>  
-    <h1 style="text-align: center;">商品课程列表</h1>  
+    <h1 style="text-align: center; color: white;">商品课程列表</h1>  
     <el-table  
       :data="courses"  
       style="width: 100%"  

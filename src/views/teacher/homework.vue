@@ -6,7 +6,7 @@
           :before-close="handleClose"
           width="50%">
         <!--表单数据-->
-        <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
+        <el-form ref="form"  :rules="rules" :model="form" label-width="120px">
           <el-form-item label="作业标题" prop="name">
             <el-input v-model="form.name" placeholder="请输入作业标题" style="width: 50%;"></el-input>
           </el-form-item>
