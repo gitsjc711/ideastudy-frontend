@@ -126,6 +126,9 @@ export default {
                     'Content-Type': 'application/json'  
                 }}).then(res=>{this.errorCode=res.data
                     resolve(this.errorCode)
+                    if(this.errorCode!="OK"){
+                      alert(this.errorCode)
+                    }
 
                 }
             ).catch(

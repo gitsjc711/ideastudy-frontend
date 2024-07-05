@@ -45,9 +45,54 @@
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog
+          title="修改课程"
+          :visible.sync="updateDialogVisible"
+          :before-close="handleUpdateClose"
+          width="50%">
+        <!--表单数据-->
+        <el-form ref="updateForm"  :rules="updateRules" :model="updateForm" label-width="80px">
+          <el-form-item label="课程名称" prop="name">
+            <el-input v-model="updateForm.name" placeholder="请输入课程名" style="width:50%;"></el-input>
+          </el-form-item>
+          <el-form-item label="课程目录" prop="category">
+            <el-input v-model="updateForm.category" placeholder="请输入课程目录" style="width: 50%;"></el-input>
+          </el-form-item>
+          <el-form-item label="课程价格" prop="price">
+            <el-input v-model="updateForm.price" placeholder="请输入课程价格" style="width: 30%;"></el-input>
+          </el-form-item>
+          <el-form-item label="课程介绍" prop="description">
+            <el-input  type="textarea"
+                       style="width:50%;"
+                       :rows="4" 
+                       v-model="updateForm.description" 
+                       placeholder="请输入课程介绍">
+                    </el-input>
+          </el-form-item>
+          <el-form-item label="课程图片" prop="image">
+            <el-upload  
+                       class="upload-demo"  
+                       drag  
+                       :action="uploadUrl"
+                       :limit="1"
+                       :before-upload="beforeUpload"
+                       :on-success="onSuccess"
+                        multiple>            
+                        <i class="el-icon-upload"></i>  
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>  
+                        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过100mb</div>  
+            </el-upload> 
+          </el-form-item>
+        </el-form>
+  
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitUpdate">确 定</el-button>
+        </span>
+      </el-dialog>
+      
       <div class="manage-header">
         <el-button type="primary" @click="handleAdd">+ 新增课程</el-button>
-        
+        <el-button type="primary" @click="handleUpdate">修改课程</el-button>
 
         <div class="course-grid">  
     <h1 style="text-align: center;" >我教的课</h1>  
@@ -87,7 +132,16 @@ import { mapGetters, mapState,mapMutations} from 'vuex';
     data(){
       return{
         dialogVisible: false,
+        updateDialogVisible:false,
         form:{
+          name:'',
+          description:'',
+         category:'',
+         price:'',
+          image:null,
+        
+        },
+        updateForm:{
           name:'',
           description:'',
          category:'',
@@ -110,6 +164,11 @@ import { mapGetters, mapState,mapMutations} from 'vuex';
           price: [
             {required: true, message: '请输入课程价格', trigger: 'blur'},
           ],
+        },
+        updateRules: {
+          name: [
+            {required: true, message: '请输入课程名', trigger: 'blur'},
+          ]
         },
         tableData: [],
         modalType: 0,// 0表示新增的弹框，1表示编辑的弹框
@@ -137,10 +196,62 @@ import { mapGetters, mapState,mapMutations} from 'vuex';
           }
         })
       },
+      submit(){
+        this.$refs.form.validate(async (valid)=>{
+          if(valid){
+            await this.addCourse()
+            await this.getMyTeach()
+            console.log(this.form);
+            // 关闭弹窗
+            this.dialogVisible = false;
+            // 表单内容清空
+            this.$refs.form.resetFields();
+          }
+        })
+      },
+      submitUpdate(){
+        this.$refs.updateForm.validate(async (valid)=>{
+          if(valid){
+            await this.updateCourse()
+            await this.getMyTeach()
+            console.log(this.updateForm);
+            // 关闭弹窗
+            this.updateDialogVisible = false;
+            // 表单内容清空
+            this.$refs.updateForm.resetFields();
+          }
+        })
+      },
+      updateCourse(){
+          return new Promise((resolve, reject) => {this.$axios.post(this.baseUrl+"/course/update",{
+              name:this.updateForm.name,
+              description:this.updateForm.description,
+              price:this.updateForm.price,
+              category:this.updateForm.category,
+              imageUrl:this.imageUrl,
+              teacherId:this.uid
+            },{  
+            headers: {  
+              'Content-Type': 'application/json'  
+          }}).then(res=>{
+                this.errorCode=res.data
+              resolve(this.errorCode)
+            }
+          ).catch(error=>{
+            console.error(error);
+            reject(error)
+          })})
+        
+      },
       handleClose(){
         // 弹框关闭前情况数据
         this.$refs.form.resetFields();
         this.dialogVisible = false;
+      },
+      handleUpdateClose(){
+        // 弹框关闭前情况数据
+        this.$refs.updateForm.resetFields();
+        this.updateDialogVisible = false;
       },
       cancel(){
         this.handleClose();
@@ -174,6 +285,10 @@ import { mapGetters, mapState,mapMutations} from 'vuex';
       handleAdd(){
       this.modalType = 0;
       this.dialogVisible = true;
+      },
+      handleUpdate(){
+      this.modalType = 0;
+      this.updateDialogVisible = true;
       },
       getMyTeach(){
         return new Promise((resolve, reject) => {this.$axios.post(this.baseUrl+"/course/findMyTeach",{
