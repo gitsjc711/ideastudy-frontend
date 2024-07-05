@@ -276,9 +276,9 @@ img{
   p{
     line-height: 28px;
     font-size: 14px;
-    color: #665d5d;
+    color: #272424;
     span{
-      color: #666666;
+      color: #272424;
       margin-left: 60px;
     }
   }

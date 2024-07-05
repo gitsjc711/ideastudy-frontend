@@ -147,7 +147,7 @@
       .name{
         font-size: 40px;
         margin-bottom: 10px;
-        font-family: tang;
+        font-family: yuan;
       }
       .access{
         color: #181818;

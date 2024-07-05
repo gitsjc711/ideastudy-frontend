@@ -22,3 +22,11 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    /*给字体命名*/
+    font-family: 'yuan';
+    /*引入字体文件*/
+    src: url('./萌趣芋圆体.ttf');
+    font-weight: normal;
+    font-style: normal;
+}

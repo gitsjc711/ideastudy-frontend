@@ -95,7 +95,7 @@
         <el-button type="primary" @click="handleUpdate">修改课程</el-button>
 
         <div class="course-grid">  
-    <h1 style="text-align: center;" >我教的课</h1>  
+    <h1 style="text-align: center; color: white;" >我教的课</h1>  
     <div class="grid-container">  
       <div  
         v-for="(course, index) in courses"  
@@ -404,6 +404,14 @@ import { mapGetters, mapState,mapMutations} from 'vuex';
   display: -webkit-box;  
   -webkit-line-clamp: 1; /* 限制行数 */  
   -webkit-box-orient: vertical;  
+  }
+  h1 {
+    text-align: center;
+    /* Center the heading */
+    font-size: 24px;
+    /* Increase the font size for better visibility */
+    margin-bottom: 20px;
+    /* Add some space below the heading */
   }
   </style>
   
